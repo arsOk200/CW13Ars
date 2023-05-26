@@ -6,9 +6,27 @@ import User from '../models/User';
 // import * as crypto from "crypto";
 import { imagesUpload } from '../multer';
 import auth from '../middleware/auth';
-import { promises as fs } from 'fs';
+// import { promises as fs } from 'fs';
+// import fs from 'fs';
 import path from 'path';
 import config from '../config';
+import axios from 'axios';
+import crypto from 'crypto';
+import * as fs from 'fs';
+
+// async function downloadImage(url: string, filepath: string) {
+//   const response = await axios({
+//     url,
+//     method: 'GET',
+//     responseType: 'stream',
+//   });
+//   return new Promise((resolve, reject) => {
+//     response.data
+//       .pipe(fs.createWriteStream(filepath))
+//       .on('error', reject)
+//       .once('close', () => resolve(filepath));
+//   });
+// }
 
 const UsersRouter = express.Router();
 // const client = new OAuth2Client(config.google.clientId);
@@ -108,6 +126,8 @@ UsersRouter.post('/sessions', async (req, res, next) => {
 //     }
 //     let user = await User.findOne({ googleId: googleId });
 //     if (!user) {
+//       const randomImageName = `${crypto.randomUUID()}.png`;
+//       await downloadImage(avatar, `./public/images/${randomImageName}`)
 //       user = new User({
 //         username:email,
 //         password: crypto.randomUUID(),
@@ -131,7 +151,12 @@ UsersRouter.delete('/:id', auth, async (req, res, next) => {
       return res.send({ error: 'User is not found!' });
     }
     if (user.image) {
-      await fs.unlink(path.join(config.publicPath, `${user.image}`));
+      await fs.unlink(path.join(config.publicPath, `${user.image}`), (err) => {
+        if (err) console.log(err);
+        else {
+          console.log('\nDeleted file');
+        }
+      });
     }
     const deletedUser = await User.deleteOne({ _id: req.params.id });
     return res.send(deletedUser);
