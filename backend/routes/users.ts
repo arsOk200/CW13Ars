@@ -6,27 +6,29 @@ import User from '../models/User';
 // import * as crypto from "crypto";
 import { imagesUpload } from '../multer';
 import auth from '../middleware/auth';
-// import { promises as fs } from 'fs';
-// import fs from 'fs';
 import path from 'path';
-import config from '../config';
 import axios from 'axios';
-import crypto from 'crypto';
-import * as fs from 'fs';
+import { promises as fs } from 'fs';
+import { extname, join } from 'path';
+import { parse } from 'url';
+import { randomUUID } from 'crypto';
+import config from '../config';
 
-// async function downloadImage(url: string, filepath: string) {
-//   const response = await axios({
-//     url,
-//     method: 'GET',
-//     responseType: 'stream',
-//   });
-//   return new Promise((resolve, reject) => {
-//     response.data
-//       .pipe(fs.createWriteStream(filepath))
-//       .on('error', reject)
-//       .once('close', () => resolve(filepath));
-//   });
-// }
+export const urlImageUpload = async (url: string, path: string) => {
+  const destDir = join(config.publicPath, path);
+  await fs.mkdir(destDir, { recursive: true });
+  const ext = extname(<string>parse(url).pathname);
+  const filename = join(path, randomUUID() + ext);
+  const fileResponse = await axios({
+    url,
+    method: 'GET',
+    responseType: 'stream',
+  });
+
+  await fs.writeFile(join(config.publicPath, filename), fileResponse.data);
+
+  return filename;
+};
 
 const UsersRouter = express.Router();
 // const client = new OAuth2Client(config.google.clientId);
@@ -46,7 +48,6 @@ UsersRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
     if (error instanceof mongoose.Error.ValidationError) {
       return res.status(400).send(error);
     }
-
     return next(error);
   }
 });
@@ -84,23 +85,38 @@ UsersRouter.get('/:id', auth, async (req, res, next) => {
   }
 });
 
+UsersRouter.delete('/sessions', async (req, res, next) => {
+  try {
+    const token = req.get('Authorization');
+    const success = { message: 'ok' };
+    if (!token) {
+      return res.send(success);
+    }
+    const user = await User.findOne({ token });
+    if (!user) {
+      return res.send(success);
+    }
+    user.generateToken();
+    await user.save();
+    return res.send(success);
+  } catch (e) {
+    return next(e);
+  }
+});
+
 UsersRouter.post('/sessions', async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ username: req.body.username });
 
   if (!user) {
     return res.status(400).send({ error: 'Email or password is incorrect!' });
   }
-
   const isMatch = await user.checkPassword(req.body.password);
-
   if (!isMatch) {
     return res.status(400).send({ error: 'Email or password is incorrect!' });
   }
-
   try {
     user.generateToken();
     await user.save();
-
     return res.send({ message: 'Username and password correct!', user });
   } catch (e) {
     return next(e);
@@ -151,12 +167,7 @@ UsersRouter.delete('/:id', auth, async (req, res, next) => {
       return res.send({ error: 'User is not found!' });
     }
     if (user.image) {
-      await fs.unlink(path.join(config.publicPath, `${user.image}`), (err) => {
-        if (err) console.log(err);
-        else {
-          console.log('\nDeleted file');
-        }
-      });
+      await fs.unlink(path.join(config.publicPath, `${user.image}`));
     }
     const deletedUser = await User.deleteOne({ _id: req.params.id });
     return res.send(deletedUser);

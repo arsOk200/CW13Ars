@@ -5,11 +5,12 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { LoginMutation } from '../types';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { googleLogin, login } from '../features/user/userThunks';
-import { selectLoginError } from '../features/user/userSlice';
+import { selectLoginError, selectLoginLoading } from '../features/user/userSlice';
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectLoginError);
+  const loading = useAppSelector(selectLoginLoading);
   const navigate = useNavigate();
   const [firstColor, setFirstColor] = useState('');
   const [secondColor, setSecondColor] = useState('');
@@ -92,6 +93,7 @@ const Login = () => {
           <Grid container sx={{ flexDirection: 'column' }} spacing={2}>
             <Grid item xs={12}>
               <TextField
+                required
                 label="Username"
                 name="username"
                 autoComplete="current-username"
@@ -101,6 +103,7 @@ const Login = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                required
                 label="Password"
                 name="password"
                 type="password"
@@ -116,6 +119,7 @@ const Login = () => {
             variant="contained"
             color={'inherit'}
             sx={{ mt: 3, mb: 2, backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+            disabled={loading}
           >
             Sign In
           </Button>

@@ -6,12 +6,12 @@ import cookieParser from 'cookie-parser';
 import usersRouter from './routes/users';
 
 const app = express();
-const port = 8001;
+const port = 8000;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/user', usersRouter);
+app.use('/users', usersRouter);
 
 const run = async () => {
   mongoose.set('strictQuery', false);

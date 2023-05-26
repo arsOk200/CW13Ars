@@ -4,13 +4,14 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RegisterMutation } from '../types';
-import { selectRegisterError } from '../features/user/userSlice';
+import { selectRegisterError, selectRegisterLoading } from '../features/user/userSlice';
 import { register } from '../features/user/userThunks';
 import FileInput from '../components/FileInput/FileInput';
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
+  const loading = useAppSelector(selectRegisterLoading);
   const navigate = useNavigate();
   const [firstColor, setFirstColor] = useState('');
   const [secondColor, setSecondColor] = useState('');
@@ -26,9 +27,11 @@ const Register = () => {
     setFirstColor(startColor);
     setSecondColor(endColor);
   };
+
   useEffect(() => {
     generateRandomGradient();
   }, [dispatch]);
+
   const [state, setState] = useState<RegisterMutation>({
     username: '',
     password: '',
@@ -136,6 +139,7 @@ const Register = () => {
             color={'inherit'}
             variant="contained"
             sx={{ mt: 3, mb: 2, backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+            disabled={loading}
           >
             Sign Up
           </Button>
