@@ -10,7 +10,7 @@ const AppToolbar = () => {
   const user = useAppSelector(selectUser);
 
   return (
-    <AppBar position="static" sx={{ bgcolor: 'white' }}>
+    <AppBar position="static" sx={{ bgcolor: 'white', boxShadow: '0px 0px 0px' }}>
       <Toolbar>
         <Grid container sx={{ alignItems: 'center' }}>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, alignItems: 'center' }}>

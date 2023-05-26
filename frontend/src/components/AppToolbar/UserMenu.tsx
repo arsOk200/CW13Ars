@@ -61,7 +61,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             if (await confirm('Выход', 'Вы действительно хотите выйти?')) {
               dispatch(logout());
               handleClose();
-              navigate('/login');
+              navigate('/');
             }
           }}
         >
