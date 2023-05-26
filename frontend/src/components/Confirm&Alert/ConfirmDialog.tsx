@@ -12,10 +12,12 @@ const Confirm = () => {
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button color="warning" onClick={onConfirm}>
+        <Button sx={{ color: 'black' }} onClick={onConfirm}>
           Подтверждаю
         </Button>
-        <Button onClick={onCancel}>Отмена</Button>
+        <Button sx={{ color: 'black' }} onClick={onCancel}>
+          Отмена
+        </Button>
       </DialogActions>
     </Dialog>
   );

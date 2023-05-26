@@ -59,7 +59,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         </MenuItem>
         <MenuItem
           onClick={async () => {
-            if (await confirm('Выход', 'Вы действительно хотите выйти?')) {
+            if (await confirm('Exit', 'Are you sure you want to go out?')) {
               dispatch(logout());
               handleClose();
               navigate('/');
