@@ -7,6 +7,7 @@ import Register from './containers/Register';
 import { useAppSelector } from './app/hooks';
 import { selectUser } from './features/user/userSlice';
 import Protected from './components/Protected';
+import NotFound from './containers/NotFound';
 
 function App() {
   const user = useAppSelector(selectUser);
@@ -19,6 +20,7 @@ function App() {
           <Route path="/register" element={<Register />} />
         </Route>
         <Route path="/" element={<Products />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
   );
