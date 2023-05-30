@@ -8,6 +8,13 @@ import { apiUrl } from '../../constants';
 import { logout } from '../../features/user/userThunks';
 import useConfirm from '../Confirm&Alert/useConfirm';
 import Divider from '@mui/material/Divider';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 interface Props {
   user: User;
@@ -44,20 +51,37 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         />
       </Button>
       <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
+        <MenuItem>
+          <AccountCircleIcon sx={{ mr: 1 }} />
+          Edit profile
+        </MenuItem>
+        {user.role === 'user' ? (
+          <MenuItem component={NavLink} to="/new-track">
+            <AddCircleIcon sx={{ mr: 1 }} />
+            Create Product&Category
+          </MenuItem>
+        ) : (
+          ''
+        )}
         <Divider sx={{ my: 0.5 }} />
-        <MenuItem component={NavLink} to="/track-history"></MenuItem>
         <MenuItem component={NavLink} to="/new-artist">
-          корзина
+          <ShoppingBasketIcon sx={{ mr: 1 }} />
+          Basket
         </MenuItem>
         <MenuItem component={NavLink} to="/new-album">
-          семья
+          <SpeakerNotesIcon sx={{ mr: 1 }} />
+          Notes
+        </MenuItem>
+        <MenuItem component={NavLink} to="/new-album">
+          <NotificationsIcon sx={{ mr: 1 }} />
+          Notifications
         </MenuItem>
         <MenuItem component={NavLink} to="/new-track">
-          настройки
+          <FamilyRestroomIcon sx={{ mr: 1 }} />
+          Family
         </MenuItem>
         <MenuItem
+          sx={{ color: 'red' }}
           onClick={async () => {
             if (await confirm('Exit', 'Are you sure you want to go out?')) {
               dispatch(logout());
@@ -66,6 +90,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             }
           }}
         >
+          <LogoutIcon sx={{ mr: 1 }} />
           Logout
         </MenuItem>
       </Menu>

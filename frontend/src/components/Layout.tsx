@@ -13,11 +13,13 @@ const Layout: React.FC<Props> = ({ children }) => {
     <>
       <CssBaseline />
       <AppToolbar />
-      <Box component="main">
-        <Container maxWidth={false}>{children}</Container>
+      <Box component="main" sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Container maxWidth={false} sx={{ flexGrow: 1 }}>
+          {children}
+        </Container>
+        <Links />
+        <Footer />
       </Box>
-      <Links />
-      <Footer />
     </>
   );
 };

@@ -3,6 +3,8 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
 import { usersReducer } from '../features/user/userSlice';
+import { categoryReducer } from '../features/category/CategorySlice';
+import { productReducer } from '../features/products/productsSlice';
 
 const usersPersistConfig = {
   key: 'OnlineShop:users',
@@ -11,6 +13,8 @@ const usersPersistConfig = {
 };
 const rootReducer = combineReducers({
   users: persistReducer(usersPersistConfig, usersReducer),
+  category: categoryReducer,
+  product: productReducer,
 });
 
 export const store = configureStore({

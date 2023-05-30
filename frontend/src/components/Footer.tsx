@@ -6,7 +6,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 
 const Footer = () => {
   return (
-    <Paper component="footer" square variant="outlined" sx={{ padding: '30px', bgcolor: 'black', minHeight: '300px' }}>
+    <Paper component="footer" square variant="outlined" sx={{ padding: '30px', bgcolor: 'black', minHeight: '200px' }}>
       <Container maxWidth="lg">
         <Box sx={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', display: 'flex', my: 1 }}>
           <ShoppingBasketIcon fontSize="large" sx={{ color: 'white', marginRight: '5px' }} />

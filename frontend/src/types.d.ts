@@ -39,3 +39,26 @@ export interface LoginMutation {
   username: string;
   password: string;
 }
+
+export interface CategoryList {
+  _id: string;
+  name: string;
+}
+export type CategoryMutation = Omit<CategoryList, '_id'>;
+
+export interface ProductList {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string | null;
+  category: Category;
+}
+
+export interface ProductMutation {
+  category: string;
+  title: string;
+  price: string;
+  description: string;
+  image: File | null;
+}
