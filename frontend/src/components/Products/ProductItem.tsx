@@ -17,9 +17,10 @@ interface Props {
   product: ProductList;
   deleteProduct: React.MouseEventHandler;
   deletingProduct: string | false;
+  onEditing: React.MouseEventHandler;
 }
 
-const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct }) => {
+const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct, onEditing }) => {
   const user = useAppSelector(selectUser);
   let buttons = (
     <Typography variant="h6" sx={{ color: 'white' }}>
@@ -43,7 +44,7 @@ const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct 
         >
           <DeleteIcon />
         </Button>
-        <Button size="small" sx={{ color: 'black' }}>
+        <Button size="small" sx={{ color: 'black' }} onClick={onEditing}>
           <EditIcon />
         </Button>
       </>
@@ -64,10 +65,10 @@ const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct 
             {product.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {product.category.name}
+            Category: {product.category.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {product.price}
+            {product.price} SOM
           </Typography>
         </CardContent>
       </CardActionArea>

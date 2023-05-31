@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, CircularProgress, Grid, MenuItem, TextField } from '@mui/material';
 import { ProductMutation, ValidationError } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectCategoryList } from '../../features/category/CategorySlice';
@@ -9,18 +9,23 @@ import FileInput from '../FileInput/FileInput';
 interface Props {
   onSubmit: (mutation: ProductMutation) => void;
   error: ValidationError | null;
+  isEdit?: boolean;
+  Loading: boolean;
+  existingProduct?: ProductMutation;
 }
 
-const ProductForm: React.FC<Props> = ({ onSubmit, error }) => {
+const initialState: ProductMutation = {
+  category: '',
+  name: '',
+  price: '',
+  description: '',
+  image: null,
+};
+
+const ProductForm: React.FC<Props> = ({ onSubmit, error, Loading, existingProduct = initialState, isEdit }) => {
   const dispatch = useAppDispatch();
   const categories = useAppSelector(selectCategoryList);
-  const [state, setState] = useState<ProductMutation>({
-    category: '',
-    name: '',
-    price: '',
-    description: '',
-    image: null,
-  });
+  const [state, setState] = useState<ProductMutation>(existingProduct);
 
   useEffect(() => {
     dispatch(fetchCategory());
@@ -57,8 +62,9 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error }) => {
 
   return (
     <form autoComplete="off" onSubmit={submitFormHandler}>
-      <Grid container direction="column" sx={{ alignItems: 'center', width: '100%' }} spacing={2}>
-        <Grid item xl={12}>
+      {Loading ? <CircularProgress /> : isEdit ? 'Edit product' : 'Create produc'}
+      <Grid container direction="column" sx={{ alignItems: 'stretch', width: '100%' }} spacing={2}>
+        <Grid item xs={12}>
           <TextField
             select
             id="category"
@@ -66,6 +72,7 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error }) => {
             value={state.category}
             onChange={inputChangeHandler}
             required
+            sx={{ minWidth: '200px' }}
             name="category"
             error={Boolean(getFieldError('category'))}
             helperText={getFieldError('category')}
@@ -94,6 +101,7 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error }) => {
         </Grid>
         <Grid item xs={12}>
           <TextField
+            type="number"
             id="price"
             label="Price"
             value={state.price}
@@ -107,7 +115,8 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error }) => {
         <Grid item xs={12}>
           <TextField
             multiline
-            rows={3}
+            rows={9}
+            fullWidth
             id="description"
             label="Description"
             value={state.description}
@@ -121,8 +130,8 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error }) => {
           <FileInput onChange={fileInputChangeHandler} name="image" label="Image" />
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" color="info" variant="contained" sx={{ bgcolor: 'black' }}>
-            Create
+          <Button disabled={Loading} type="submit" color="info" variant="contained" sx={{ bgcolor: 'black' }}>
+            {Loading ? <CircularProgress /> : isEdit ? 'Edit' : 'Create'}
           </Button>
         </Grid>
       </Grid>

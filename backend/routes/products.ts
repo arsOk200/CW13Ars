@@ -41,6 +41,35 @@ productsRouter.get('/:id', async (req, res, next) => {
   }
 });
 
+productsRouter.put('/:id', auth, permit('admin'), imagesUpload.single('image'), async (req, res, next) => {
+  const Edit = {
+    category: req.body.category,
+    name: req.body.name,
+    description: req.body.description,
+    price: parseFloat(req.body.price),
+  };
+  try {
+    const id = req.params.id as string;
+    const product = await Product.findOne({ _id: id });
+    if (!product) {
+      return res.status(404).send({ name: 'Not Found' });
+    }
+    const images = {
+      image: req.file ? req.file.filename : null,
+    };
+    if (product) {
+      if (images.image && images.image !== product.image) {
+        await fs.unlink(path.join(config.publicPath, `/images/${product.image}`));
+        await Product.updateOne({ _id: id }, { image: images.image });
+      }
+    }
+    await Product.updateMany({ _id: id }, Edit);
+    return res.send(product);
+  } catch (e) {
+    return next(e);
+  }
+});
+
 productsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), async (req, res, next) => {
   try {
     const product = await Product.create({
@@ -61,18 +90,19 @@ productsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), as
 });
 
 productsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+  const id = req.params.id as string;
   try {
-    const _id = req.params.id as string;
-    const product = await Product.findById(_id);
+    const product = await Product.findById(id);
     if (!product) {
       return res.status(404).send({ error: 'Product not found' });
     }
     if (product.image) {
       await fs.unlink(path.join(config.publicPath, `/images/${product.image}`));
     }
-    const result = await Product.deleteOne({ _id });
+    const result = await Product.deleteOne({ id });
     return res.send(result);
   } catch (e) {
+    await Product.deleteOne({ _id: id });
     return next(e);
   }
 });

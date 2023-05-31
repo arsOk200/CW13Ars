@@ -60,5 +60,13 @@ export interface ProductMutation {
   name: string;
   price: string;
   description: string;
-  image: File | null;
+  image: File | null | string;
+}
+
+export interface Family {
+  _id: string;
+  name: string;
+  users: {
+    user: User;
+  }[];
 }

@@ -7,12 +7,13 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProductForm from './ProductForm';
 import { Typography } from '@mui/material';
-import { selectProductError } from '../../features/products/productsSlice';
+import { selectCreateProductLoading, selectProductError } from '../../features/products/productsSlice';
 
 const CreateProduct = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const error = useAppSelector(selectProductError);
+  const createLoading = useAppSelector(selectCreateProductLoading);
 
   const onFormSubmit = async (ProductMutation: ProductMutation) => {
     try {
@@ -28,7 +29,7 @@ const CreateProduct = () => {
       <Typography sx={{ mb: 2 }} variant="h4">
         New product
       </Typography>
-      <ProductForm onSubmit={onFormSubmit} error={error} />
+      <ProductForm onSubmit={onFormSubmit} error={error} Loading={createLoading} />
     </>
   );
 };

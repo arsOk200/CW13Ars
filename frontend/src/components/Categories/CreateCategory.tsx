@@ -24,13 +24,10 @@ import {
 } from '../../features/category/CategoryThunk';
 import { CategoryMutation } from '../../types';
 import {
-  controlModal,
   selectCategoryError,
   selectCategoryList,
   selectCreateCategoryLoading,
-  selectErrorRemove,
   selectGetAllCategoryLoading,
-  selectModal,
   selectOneCategory,
   selectUpdateCategoryLoading,
 } from '../../features/category/CategorySlice';

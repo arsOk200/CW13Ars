@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ProductsList from '../components/Products/ProductsList';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { useNavigate, useOutlet, useParams } from 'react-router-dom';
+import { useNavigate, useOutlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectCategoryList, selectGetAllCategoryLoading } from '../features/category/CategorySlice';
 import { fetchCategory } from '../features/category/CategoryThunk';

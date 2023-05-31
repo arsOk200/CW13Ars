@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Divider, Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { User } from '../../types';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';

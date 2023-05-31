@@ -25,7 +25,7 @@ export const fetchOneProduct = createAsyncThunk<ProductList, string>('product/fe
 
 interface UpdateParams {
   id: string;
-  area: ProductMutation;
+  name: ProductMutation;
 }
 
 export const updateProduct = createAsyncThunk<
@@ -35,7 +35,15 @@ export const updateProduct = createAsyncThunk<
 >('product/update', async (params, { rejectWithValue, dispatch, getState }) => {
   try {
     const currentProduct = getState().product.oneProduct;
-    const response = await axiosApi.put('/products/' + params.id, params.area);
+    const formData = new FormData();
+    formData.append('name', params.name.name);
+    formData.append('description', params.name.description);
+    formData.append('price', params.name.price);
+    formData.append('category', params.name.category);
+    if (params.name.image) {
+      formData.append('image', params.name.image);
+    }
+    const response = await axiosApi.put('/products/' + params.id, formData);
     if (currentProduct && currentProduct._id === params.id) {
       dispatch(setProduct(response.data));
     }
