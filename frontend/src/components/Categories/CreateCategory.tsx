@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -25,10 +24,13 @@ import {
 } from '../../features/category/CategoryThunk';
 import { CategoryMutation } from '../../types';
 import {
+  controlModal,
   selectCategoryError,
   selectCategoryList,
   selectCreateCategoryLoading,
+  selectErrorRemove,
   selectGetAllCategoryLoading,
+  selectModal,
   selectOneCategory,
   selectUpdateCategoryLoading,
 } from '../../features/category/CategorySlice';
@@ -101,6 +103,13 @@ const CreateCategory = () => {
       <CategoryForm onSubmit={onSubmit} error={error} Loading={createLoading} />
       <Box sx={{ mb: 4 }}>
         <Container>
+          {error ? (
+            <Alert sx={{ mb: 2 }} severity="error">
+              {error.name}
+            </Alert>
+          ) : (
+            ''
+          )}
           <Paper elevation={3} sx={{ width: '100%', height: '500px', overflowX: 'hidden' }}>
             <TableContainer>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">

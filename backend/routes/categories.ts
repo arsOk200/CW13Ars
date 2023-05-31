@@ -49,6 +49,11 @@ categoriesRouter.put('/:id', auth, permit('admin'), async (req, res, next) => {
 
 categoriesRouter.post('/', auth, permit('admin'), async (req, res, next) => {
   try {
+    const same = await Category.findOne({ name: req.body.name });
+
+    if (same) {
+      return res.status(400).send({ name: `Duplicate name ${same.name}` });
+    }
     const Data = new Category({
       name: req.body.name,
     });
