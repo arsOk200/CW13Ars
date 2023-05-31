@@ -57,8 +57,8 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error }) => {
 
   return (
     <form autoComplete="off" onSubmit={submitFormHandler}>
-      <Grid container direction="column" sx={{ alignItems: 'center' }} spacing={2}>
-        <Grid item xs={12}>
+      <Grid container direction="column" sx={{ alignItems: 'center', width: '100%' }} spacing={2}>
+        <Grid item xl={12}>
           <TextField
             select
             id="category"

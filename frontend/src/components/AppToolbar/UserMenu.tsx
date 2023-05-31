@@ -33,7 +33,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   let cardImage = notImageAvailable;
   if (user.image) {
-    cardImage = apiUrl + '/' + user.image;
+    cardImage = apiUrl + '/images/' + user.image;
   }
 
   if (user.googleId && user.image) {

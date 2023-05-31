@@ -35,7 +35,7 @@ categoriesRouter.put('/:id', auth, permit('admin'), async (req, res, next) => {
     const id = req.params.id as string;
     const result = await Category.findOne({ _id: id });
     if (!result) {
-      return res.status(404).send({ error: 'area not found!' });
+      return res.status(404).send({ error: 'not found!' });
     }
     await Category.updateOne({ _id: id }, { name: edit.name });
     return res.send(result);

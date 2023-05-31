@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Box, Button, Grid, TextField, Typography, CircularProgress } from '@mui/material';
+import { Box, Button, Grid, TextField, Typography, CircularProgress } from '@mui/material';
 import { CategoryMutation, ValidationError } from '../../types';
 
 interface Props {
@@ -20,6 +20,7 @@ const CategoryForm: React.FC<Props> = ({ onSubmit, error, Loading, isEdit, exist
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(state);
+    setState({ name: '' });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

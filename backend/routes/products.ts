@@ -45,7 +45,7 @@ productsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), as
   try {
     const product = await Product.create({
       category: req.body.category,
-      name: req.body.title,
+      name: req.body.name,
       description: req.body.description,
       price: parseFloat(req.body.price),
       image: req.file ? req.file.filename : null,
@@ -68,7 +68,7 @@ productsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
       return res.status(404).send({ error: 'Product not found' });
     }
     if (product.image) {
-      await fs.unlink(path.join(config.publicPath, `${product.image}`));
+      await fs.unlink(path.join(config.publicPath, `/images/${product.image}`));
     }
     const result = await Product.deleteOne({ _id });
     return res.send(result);

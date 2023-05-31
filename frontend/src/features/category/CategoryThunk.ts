@@ -20,7 +20,7 @@ export const fetchOneCategory = createAsyncThunk<CategoryList, string>('category
 
 interface UpdateParams {
   id: string;
-  area: CategoryMutation;
+  name: CategoryMutation;
 }
 
 export const updateCategory = createAsyncThunk<
@@ -30,7 +30,7 @@ export const updateCategory = createAsyncThunk<
 >('category/update', async (params, { rejectWithValue, dispatch, getState }) => {
   try {
     const currentCategory = getState().category.oneCategory;
-    const response = await axiosApi.put('/category/' + params.id, params.area);
+    const response = await axiosApi.put('/category/' + params.id, params.name);
     if (currentCategory && currentCategory._id === params.id) {
       dispatch(setCategory(response.data));
     }
