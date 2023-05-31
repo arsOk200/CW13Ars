@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Button, Divider, Menu, MenuItem } from '@mui/material';
 import { User } from '../../types';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
@@ -7,7 +7,6 @@ import notImageAvailable from '../../assets/UnknownUser.jpg';
 import { apiUrl } from '../../constants';
 import { logout } from '../../features/user/userThunks';
 import useConfirm from '../Confirm&Alert/useConfirm';
-import Divider from '@mui/material/Divider';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -34,7 +33,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   let cardImage = notImageAvailable;
   if (user.image) {
-    cardImage = apiUrl + '/images/' + user.image;
+    cardImage = apiUrl + '/' + user.image;
   }
 
   if (user.googleId && user.image) {
@@ -55,28 +54,29 @@ const UserMenu: React.FC<Props> = ({ user }) => {
           <AccountCircleIcon sx={{ mr: 1 }} />
           Edit profile
         </MenuItem>
-        {user.role === 'user' ? (
-          <MenuItem component={NavLink} to="/new-track">
+        {user.role === 'admin' && [
+          <MenuItem key="create_product" component={NavLink} to="/create_product">
             <AddCircleIcon sx={{ mr: 1 }} />
-            Create Product&Category
-          </MenuItem>
-        ) : (
-          ''
-        )}
-        <Divider sx={{ my: 0.5 }} />
-        <MenuItem component={NavLink} to="/new-artist">
+            Create Product
+          </MenuItem>,
+          <MenuItem key="create_category" component={NavLink} to="/create_category">
+            <AddCircleIcon sx={{ mr: 1 }} />
+            Create Category
+          </MenuItem>,
+        ]}
+        <MenuItem component={NavLink} to="/basket">
           <ShoppingBasketIcon sx={{ mr: 1 }} />
           Basket
         </MenuItem>
-        <MenuItem component={NavLink} to="/new-album">
+        <MenuItem component={NavLink} to="/notes">
           <SpeakerNotesIcon sx={{ mr: 1 }} />
           Notes
         </MenuItem>
-        <MenuItem component={NavLink} to="/new-album">
+        <MenuItem component={NavLink} to="/Notifications">
           <NotificationsIcon sx={{ mr: 1 }} />
           Notifications
         </MenuItem>
-        <MenuItem component={NavLink} to="/new-track">
+        <MenuItem component={NavLink} to="/family">
           <FamilyRestroomIcon sx={{ mr: 1 }} />
           Family
         </MenuItem>

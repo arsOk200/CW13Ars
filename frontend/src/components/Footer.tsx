@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Container, Paper, Typography } from '@mui/material';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { Link } from 'react-router-dom';
-import FacebookIcon from '@mui/icons-material/Facebook';
 
 const Footer = () => {
   return (

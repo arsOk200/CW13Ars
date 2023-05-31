@@ -57,7 +57,7 @@ export interface ProductList {
 
 export interface ProductMutation {
   category: string;
-  title: string;
+  name: string;
   price: string;
   description: string;
   image: File | null;

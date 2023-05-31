@@ -8,6 +8,7 @@ interface productSlice {
   getAllProductLoading: boolean;
   createProductLoading: boolean;
   removeProductLoading: boolean;
+  deletingProduct: string | false;
   productError: ValidationError | null;
   errorRemove: GlobalError | null;
   modal: boolean;
@@ -27,6 +28,7 @@ const initialState: productSlice = {
   oneProduct: null,
   updateProductLoading: false,
   oneProductLoading: false,
+  deletingProduct: false,
 };
 
 const productSlice = createSlice({
@@ -89,8 +91,9 @@ const productSlice = createSlice({
       state.createProductLoading = false;
     });
 
-    builder.addCase(removeProduct.pending, (state) => {
+    builder.addCase(removeProduct.pending, (state, { meta: { arg: productID } }) => {
       state.removeProductLoading = true;
+      state.deletingProduct = productID;
     });
     builder.addCase(removeProduct.fulfilled, (state) => {
       state.removeProductLoading = false;
@@ -107,6 +110,7 @@ export const productReducer = productSlice.reducer;
 export const { controlModal } = productSlice.actions;
 export const selectProductList = (state: RootState) => state.product.listProduct;
 export const selectGetAllProductLoading = (state: RootState) => state.product.getAllProductLoading;
+export const selectDeletingProduct = (state: RootState) => state.product.deletingProduct;
 export const selectCreateProductLoading = (state: RootState) => state.product.createProductLoading;
 export const selectRemoveProductLoading = (state: RootState) => state.product.removeProductLoading;
 export const selectProductError = (state: RootState) => state.product.productError;

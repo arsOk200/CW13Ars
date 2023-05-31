@@ -15,7 +15,7 @@ categoriesRouter.get('/', async (req, res, next) => {
   }
 });
 
-categoriesRouter.get('/:id', auth, async (req, res, next) => {
+categoriesRouter.get('/:id', auth, permit('admin'), async (req, res, next) => {
   try {
     const result = await Category.findOne({ _id: req.params.id });
     if (!result) {
@@ -27,7 +27,7 @@ categoriesRouter.get('/:id', auth, async (req, res, next) => {
   }
 });
 
-categoriesRouter.put('/:id', auth, async (req, res, next) => {
+categoriesRouter.put('/:id', auth, permit('admin'), async (req, res, next) => {
   const edit = {
     name: req.body.name,
   };
@@ -49,11 +49,11 @@ categoriesRouter.put('/:id', auth, async (req, res, next) => {
 
 categoriesRouter.post('/', auth, permit('admin'), async (req, res, next) => {
   try {
-    const category = await Category.create({
-      title: req.body.title,
-      description: req.body.description,
+    const Data = new Category({
+      name: req.body.name,
     });
-    return res.send(category);
+    await Data.save();
+    return res.send(Data);
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
       return res.status(400).send(e);

@@ -4,13 +4,26 @@ import Product from '../models/Product';
 import mongoose from 'mongoose';
 import auth from '../middleware/auth';
 import permit from '../middleware/permit';
+import Category from '../models/Category';
+import { promises as fs } from 'fs';
+import path from 'path';
+import config from '../config';
 
 const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res, next) => {
   try {
-    const products = await Product.find().populate('category');
-    return res.send(products);
+    if (req.query.cat) {
+      const category = await Category.findOne({ name: req.query.cat });
+      if (!category) {
+        return res.status(404).send({ error: ' not found!' });
+      }
+      const products = await Product.find({ category: category._id.toString() }).populate('category');
+      return res.send(products);
+    } else {
+      const products = await Product.find().populate('category');
+      return res.send(products);
+    }
   } catch (e) {
     return next(e);
   }
@@ -20,7 +33,7 @@ productsRouter.get('/:id', async (req, res, next) => {
   try {
     const result = await Product.findById(req.params.id);
     if (!result) {
-      return res.status(404).send({ error: 'Product not found!' });
+      return res.sendStatus(404);
     }
     return res.send(result);
   } catch (e) {
@@ -32,10 +45,10 @@ productsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), as
   try {
     const product = await Product.create({
       category: req.body.category,
-      title: req.body.title,
+      name: req.body.title,
       description: req.body.description,
       price: parseFloat(req.body.price),
-      image: req.file ? 'images/products/' + req.file.filename : null,
+      image: req.file ? req.file.filename : null,
     });
     return res.send(product);
   } catch (e) {
@@ -50,9 +63,12 @@ productsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), as
 productsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
   try {
     const _id = req.params.id as string;
-    const product = await Product.findOne({ _id });
+    const product = await Product.findById(_id);
     if (!product) {
-      return res.status(404).send({ error: 'product not found' });
+      return res.status(404).send({ error: 'Product not found' });
+    }
+    if (product.image) {
+      await fs.unlink(path.join(config.publicPath, `${product.image}`));
     }
     const result = await Product.deleteOne({ _id });
     return res.send(result);
