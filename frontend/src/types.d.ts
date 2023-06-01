@@ -67,6 +67,17 @@ export interface FamilyList {
   name: string;
   owner: User;
   users: {
+    _id: string;
+  }[];
+  products: {
+    product: ProductList;
+  }[];
+}
+export interface FamilyOne {
+  _id: string;
+  name: string;
+  owner: User;
+  users: {
     user: User;
   }[];
   products: {

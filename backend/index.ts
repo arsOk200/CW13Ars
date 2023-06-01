@@ -8,7 +8,7 @@ import productsRouter from './routes/products';
 import familyRouter from './routes/family';
 
 const app = express();
-const port = 8001;
+const port = 8000;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());

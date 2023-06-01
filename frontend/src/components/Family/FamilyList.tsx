@@ -13,7 +13,14 @@ import {
 } from '../../features/family/familySlice';
 import { useParams } from 'react-router-dom';
 import useConfirm from '../Confirm&Alert/useConfirm';
-import { fetchOneFamily, fetchFamily, removeFamily, updateFamily } from '../../features/family/familyThunk';
+import {
+  fetchOneFamily,
+  fetchFamily,
+  removeFamily,
+  updateFamily,
+  addToFamily,
+  LeaveFromFamily,
+} from '../../features/family/familyThunk';
 import { toast } from 'react-toastify';
 import { FamilyMutation } from '../../types';
 import ModalBody from '../ModalBody';
@@ -46,6 +53,17 @@ const FamilyList = () => {
     }
   };
 
+  const AddToGroup = async (FamilyId: string) => {
+    await dispatch(addToFamily(FamilyId));
+    await dispatch(fetchFamily());
+    console.log(family);
+  };
+
+  const LeaveFromGroup = async (FamilyId: string) => {
+    await dispatch(LeaveFromFamily(FamilyId));
+    await dispatch(fetchFamily());
+    console.log(family);
+  };
   const openDialog = async (ID: string) => {
     await dispatch(fetchOneFamily(ID));
     setIdFor(ID);
@@ -77,6 +95,8 @@ const FamilyList = () => {
               deleteFamily={() => deleteFamily(family._id)}
               deletingFamily={deletingFamily}
               onEditing={() => openDialog(family._id)}
+              getInFamily={() => AddToGroup(family._id)}
+              leaveFamily={() => LeaveFromGroup(family._id)}
             />
           ))
         ) : (

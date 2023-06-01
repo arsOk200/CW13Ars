@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { useOutlet } from 'react-router-dom';
 import FamilyList from '../components/Family/FamilyList';

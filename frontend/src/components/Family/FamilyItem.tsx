@@ -17,18 +17,21 @@ interface Props {
   deleteFamily: React.MouseEventHandler;
   deletingFamily: string | false;
   onEditing: React.MouseEventHandler;
+  getInFamily: React.MouseEventHandler;
+  leaveFamily: React.MouseEventHandler;
 }
 
-const FamilyItem: React.FC<Props> = ({ family, deleteFamily, deletingFamily, onEditing }) => {
+const FamilyItem: React.FC<Props> = ({ family, deleteFamily, deletingFamily, onEditing, getInFamily, leaveFamily }) => {
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
   let buttons;
   let name;
   let secondButtons;
-
   if (!user) {
     return <Navigate to="/" />;
   }
+
+  const find = family.users.some((Users) => Users._id === user._id);
 
   if (user?.role === 'admin' || user?._id === family.owner._id) {
     buttons = (
@@ -47,22 +50,21 @@ const FamilyItem: React.FC<Props> = ({ family, deleteFamily, deletingFamily, onE
       </>
     );
   }
-  if (!family.users.includes({ user }) && user._id === family.owner._id) {
+  if (user._id === family.owner._id) {
     secondButtons = <></>;
-  } else if (!family.users.includes({ user })) {
+  } else if (!find) {
     secondButtons = (
-      <Button size="small" sx={{ color: 'black' }}>
+      <Button size="small" sx={{ color: 'black' }} onClick={getInFamily}>
         <PersonAddIcon />
       </Button>
     );
-  } else if (family.users.includes({ user })) {
+  } else if (find) {
     secondButtons = (
       <Button size="small" sx={{ color: 'black' }}>
-        <ExitToAppIcon />
+        <ExitToAppIcon onClick={leaveFamily} />
       </Button>
     );
   }
-
   if (family.owner.displayName === user?.displayName) {
     name = <>You</>;
   } else {

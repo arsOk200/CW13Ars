@@ -69,3 +69,11 @@ export const removeFamily = createAsyncThunk<void, string, { rejectValue: Global
     }
   },
 );
+
+export const addToFamily = createAsyncThunk<void, string>('family/addTo', async (id) => {
+  await axiosApi.patch('/family/' + id + '/toggleAdd');
+});
+
+export const LeaveFromFamily = createAsyncThunk<void, string>('family/leaveFrom', async (id) => {
+  await axiosApi.patch('/family/' + id + '/toggleDelete');
+});

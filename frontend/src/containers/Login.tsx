@@ -4,7 +4,7 @@ import { Alert, Avatar, Box, Button, Container, Grid, Link, TextField, Typograph
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { LoginMutation } from '../types';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { googleLogin, login } from '../features/user/userThunks';
+import { login } from '../features/user/userThunks';
 import { selectLoginError, selectLoginLoading } from '../features/user/userSlice';
 
 const Login = () => {

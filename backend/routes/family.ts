@@ -7,7 +7,7 @@ const familyRouter = express.Router();
 
 familyRouter.get('/', auth, async (req, res, next) => {
   try {
-    const result = await Family.find().populate('users owner');
+    const result = await Family.find().populate('owner users');
     return res.send(result);
   } catch (e) {
     return next(e);
@@ -61,7 +61,7 @@ familyRouter.put('/:id', auth, async (req, res, next) => {
 familyRouter.patch('/:id/toggleAdd', auth, async (req, res, next) => {
   try {
     const token = req.get('Authorization');
-    const user = await User.findOne({ _id: token });
+    const user = await User.findOne({ token: token });
     if (!user) {
       return res.status(404).send({ name: 'not found' });
     }
@@ -99,22 +99,20 @@ familyRouter.post('/', auth, async (req, res, next) => {
 familyRouter.patch('/:id/toggleDelete', auth, async (req, res, next) => {
   try {
     const token = req.get('Authorization');
-    const user = await User.findOne({ _id: token });
+    const user = await User.findOne({ token: token });
     if (!user) return res.status(404).send({ name: 'not found' });
 
     const id = req.params.id as string;
     const result = await Family.findOne({ _id: id });
-    if (result) {
-      if (user._id === result.owner) {
-        const update = await Family.updateOne({ _id: id }, { $pull: { users: user } });
-        return res.send(update);
-      } else if (user._id !== result.owner) {
-        const update = await Family.findOne({ _id: id, users: { $elemMatch: user._id } });
-        if (!update) return res.status(403);
-        await Family.updateOne({ _id: id }, { $pull: { users: user } });
+    if (!result) return res.status(404).send({ name: 'not found' });
+
+    if (user._id !== result.owner) {
+      const update = await Family.findOne({ _id: id, users: { $elemMatch: { _id: user._id } } });
+      if (!update) {
+        return res.status(403);
       }
-    } else {
-      return res.status(404).send({ message: 'not found' });
+      await Family.updateOne({ _id: id }, { $pull: { users: { _id: user._id } } });
+      return res.send(update);
     }
   } catch (e) {
     return next(e);

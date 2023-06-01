@@ -1,7 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { FamilyList, GlobalError, ValidationError } from '../../types';
-import { createFamily, fetchOneFamily, fetchFamily, removeFamily, updateFamily } from './familyThunk';
+import {
+  createFamily,
+  fetchOneFamily,
+  fetchFamily,
+  removeFamily,
+  updateFamily,
+  addToFamily,
+  LeaveFromFamily,
+} from './familyThunk';
 
 interface familySlice {
   listFamily: FamilyList[];
@@ -15,6 +23,8 @@ interface familySlice {
   oneFamily: null | FamilyList;
   updateFamilyLoading: boolean;
   oneFamilyLoading: boolean;
+  addingToFamily: string | false;
+  leavingFromFamily: string | false;
 }
 
 const initialState: familySlice = {
@@ -29,6 +39,8 @@ const initialState: familySlice = {
   updateFamilyLoading: false,
   oneFamilyLoading: false,
   deletingFamily: false,
+  addingToFamily: false,
+  leavingFromFamily: false,
 };
 
 const familySlice = createSlice({
@@ -102,6 +114,25 @@ const familySlice = createSlice({
       state.removeFamilyLoading = false;
       state.errorRemove = error || null;
       state.modal = true;
+    });
+
+    builder.addCase(addToFamily.pending, (state, { meta: { arg: id } }) => {
+      state.addingToFamily = id;
+    });
+    builder.addCase(addToFamily.fulfilled, (state) => {
+      state.addingToFamily = false;
+    });
+    builder.addCase(addToFamily.rejected, (state) => {
+      state.addingToFamily = false;
+    });
+    builder.addCase(LeaveFromFamily.pending, (state, { meta: { arg: id } }) => {
+      state.leavingFromFamily = id;
+    });
+    builder.addCase(LeaveFromFamily.fulfilled, (state) => {
+      state.leavingFromFamily = false;
+    });
+    builder.addCase(LeaveFromFamily.rejected, (state) => {
+      state.leavingFromFamily = false;
     });
   },
 });
