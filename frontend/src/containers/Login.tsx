@@ -45,11 +45,6 @@ const Login = () => {
     navigate('/');
   };
 
-  const googleLoginHandler = async (credentials: string) => {
-    await dispatch(googleLogin(credentials)).unwrap();
-    navigate('/');
-  };
-
   return (
     <Container
       component="main"
@@ -73,17 +68,6 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        {/*<Box sx={{pt:2}}>*/}
-        {/*  <GoogleLogin onSuccess={(credentialResponse) => {*/}
-        {/*    if(credentialResponse.credential){*/}
-        {/*     void googleLoginHandler(credentialResponse.credential);*/}
-        {/*    }*/}
-        {/*  }}*/}
-        {/*  onError={() => {*/}
-        {/*  console.log('login failed')}*/}
-        {/*  }/>*/}
-
-        {/*</Box>*/}
         {error && (
           <Alert severity="error" sx={{ mt: 3, backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
             {error.error}

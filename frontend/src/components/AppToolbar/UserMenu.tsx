@@ -35,10 +35,6 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   if (user.image) {
     cardImage = apiUrl + '/images/' + user.image;
   }
-
-  if (user.googleId && user.image) {
-    cardImage = user.image;
-  }
   return (
     <>
       <Button onClick={handleClick} sx={{ color: 'black' }}>

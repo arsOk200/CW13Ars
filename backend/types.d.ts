@@ -5,5 +5,4 @@ export interface IUser {
   role: string;
   displayName?: string;
   image: string | null;
-  googleId?: string;
 }

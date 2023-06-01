@@ -5,7 +5,6 @@ export interface User {
   role: string;
   image: string | null;
   displayName: string;
-  googleId?: string;
 }
 
 export interface RegisterResponse {
@@ -63,10 +62,17 @@ export interface ProductMutation {
   image: File | null | string;
 }
 
-export interface Family {
+export interface FamilyList {
   _id: string;
   name: string;
+  owner: User;
   users: {
     user: User;
   }[];
+  products: {
+    product: ProductList;
+  }[];
+}
+export interface FamilyMutation {
+  name: string;
 }

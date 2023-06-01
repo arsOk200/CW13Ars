@@ -11,7 +11,7 @@ import { ProductList } from '../../types';
 import { apiUrl } from '../../constants';
 import { useAppSelector } from '../../app/hooks';
 import { selectUser } from '../../features/user/userSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface Props {
   product: ProductList;
@@ -22,6 +22,7 @@ interface Props {
 
 const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct, onEditing }) => {
   const user = useAppSelector(selectUser);
+  const navigate = useNavigate();
   let buttons = (
     <Typography variant="h6" sx={{ color: 'white' }}>
       <Link style={{ color: 'black', fontWeight: 'bold' }} to={'/login'}>
@@ -52,13 +53,13 @@ const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct,
   } else if (user?.role === 'user') {
     buttons = (
       <Button size="small" sx={{ color: 'black' }}>
-        <ShoppingBasketIcon />
+        <ShoppingBasketIcon onClick={() => navigate('/product/' + product._id)} />
       </Button>
     );
   }
   return (
     <Card sx={{ maxWidth: 300, margin: '10px' }}>
-      <CardActionArea>
+      <CardActionArea onClick={() => navigate('/product/' + product._id)}>
         <CardMedia component="img" height="140" image={apiUrl + '/images/' + product.image} alt={product.name} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

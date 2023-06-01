@@ -5,6 +5,7 @@ import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist
 import { usersReducer } from '../features/user/userSlice';
 import { categoryReducer } from '../features/category/CategorySlice';
 import { productReducer } from '../features/products/productsSlice';
+import { familyReducer } from '../features/family/familySlice';
 
 const usersPersistConfig = {
   key: 'OnlineShop:users',
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   users: persistReducer(usersPersistConfig, usersReducer),
   category: categoryReducer,
   product: productReducer,
+  family: familyReducer,
 });
 
 export const store = configureStore({

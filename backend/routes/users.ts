@@ -1,37 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import User from '../models/User';
-// import {OAuth2Client} from "google-auth-library";
-// import config from "../config";
-// import * as crypto from "crypto";
 import { imagesUpload } from '../multer';
 import auth from '../middleware/auth';
 import path from 'path';
-import axios from 'axios';
 import { promises as fs } from 'fs';
-import { extname, join } from 'path';
-import { parse } from 'url';
-import { randomUUID } from 'crypto';
 import config from '../config';
 
-export const urlImageUpload = async (url: string, path: string) => {
-  const destDir = join(config.publicPath, path);
-  await fs.mkdir(destDir, { recursive: true });
-  const ext = extname(<string>parse(url).pathname);
-  const filename = join(path, randomUUID() + ext);
-  const fileResponse = await axios({
-    url,
-    method: 'GET',
-    responseType: 'stream',
-  });
-
-  await fs.writeFile(join(config.publicPath, filename), fileResponse.data);
-
-  return filename;
-};
-
 const UsersRouter = express.Router();
-// const client = new OAuth2Client(config.google.clientId);
 
 UsersRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
   try {
@@ -107,43 +83,6 @@ UsersRouter.post('/sessions', async (req, res, next) => {
     return next(e);
   }
 });
-
-// UsersRouter.post("/google", async (req, res, next) => {
-//   try {
-//     const ticket = await client.verifyIdToken({
-//       idToken: req.body.credential,
-//       audience: config.google.clientId,
-//     });
-//     const payload = ticket.getPayload();
-//     if (!payload) {
-//       return res.status(400).send({ error: "Google login error!" });
-//     }
-//     const email = payload["email"];
-//     const googleId = payload["sub"];
-//     const displayName = payload["name"];
-//     const avatar = payload["picture"];
-//     if (!email) {
-//       return res.status(400).send({ error: "Not enough user data to continue" });
-//     }
-//     let user = await User.findOne({ googleId: googleId });
-//     if (!user) {
-//       const randomImageName = `${crypto.randomUUID()}.png`;
-//       await downloadImage(avatar, `./public/images/${randomImageName}`)
-//       user = new User({
-//         username:email,
-//         password: crypto.randomUUID(),
-//         googleId: googleId,
-//         displayName:displayName,
-//         image:avatar,
-//       })
-//     }
-//     user.generateToken();
-//     await user.save();
-//     return res.send({ message: "Login with Google successful!", user });
-//   } catch (e) {
-//     return next(e);
-//   }
-// });
 
 UsersRouter.delete('/:id', auth, async (req, res, next) => {
   try {
