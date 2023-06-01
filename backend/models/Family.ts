@@ -6,7 +6,15 @@ const FamilySchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+  },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    validate: {
+      validator: (value: Types.ObjectId) => User.findById(value),
+      message: 'user is not found !',
+    },
   },
   users: {
     type: [
