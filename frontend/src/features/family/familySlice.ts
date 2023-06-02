@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { FamilyList, GlobalError, ValidationError } from '../../types';
+import { FamilyList, FamilyOne, GlobalError, ValidationError } from '../../types';
 import {
   createFamily,
   fetchOneFamily,
@@ -20,7 +20,7 @@ interface familySlice {
   familyError: ValidationError | null;
   errorRemove: GlobalError | null;
   modal: boolean;
-  oneFamily: null | FamilyList;
+  oneFamily: null | FamilyOne;
   updateFamilyLoading: boolean;
   oneFamilyLoading: boolean;
   addingToFamily: string | false;

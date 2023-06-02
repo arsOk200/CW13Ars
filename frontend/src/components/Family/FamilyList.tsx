@@ -56,13 +56,13 @@ const FamilyList = () => {
   const AddToGroup = async (FamilyId: string) => {
     await dispatch(addToFamily(FamilyId));
     await dispatch(fetchFamily());
-    console.log(family);
   };
 
   const LeaveFromGroup = async (FamilyId: string) => {
-    await dispatch(LeaveFromFamily(FamilyId));
-    await dispatch(fetchFamily());
-    console.log(family);
+    if (await confirm('', 'Do you really want to Join?')) {
+      await dispatch(LeaveFromFamily(FamilyId));
+      await dispatch(fetchFamily());
+    }
   };
   const openDialog = async (ID: string) => {
     await dispatch(fetchOneFamily(ID));

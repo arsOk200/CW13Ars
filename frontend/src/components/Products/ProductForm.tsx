@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, CircularProgress, Grid, MenuItem, TextField } from '@mui/material';
+import { Alert, Button, CircularProgress, Grid, MenuItem, TextField } from '@mui/material';
 import { ProductMutation, ValidationError } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectCategoryList } from '../../features/category/CategorySlice';
@@ -130,6 +130,13 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error, Loading, existingProduc
           <FileInput onChange={fileInputChangeHandler} name="image" label="Image" />
         </Grid>
         <Grid item xs={12}>
+          {error ? (
+            <Alert sx={{ mb: 2 }} severity="error">
+              {error.message}
+            </Alert>
+          ) : (
+            ''
+          )}
           <Button disabled={Loading} type="submit" color="info" variant="contained" sx={{ bgcolor: 'black' }}>
             {Loading ? <CircularProgress /> : isEdit ? 'Edit' : 'Create'}
           </Button>

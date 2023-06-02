@@ -2,7 +2,7 @@ import express from 'express';
 import Family from '../models/Family';
 import auth from '../middleware/auth';
 import User from '../models/User';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 const familyRouter = express.Router();
 
 familyRouter.get('/', auth, async (req, res, next) => {
@@ -17,11 +17,16 @@ familyRouter.get('/', auth, async (req, res, next) => {
 familyRouter.get('/:id', auth, async (req, res, next) => {
   try {
     const id = req.params.id as string;
-    const result = await Family.findOne({ _id: id }).populate('users', 'owner');
+    const result = await Family.aggregate([
+      { $match: { _id: new Types.ObjectId(id) } },
+      { $lookup: { from: 'users', localField: 'owner', foreignField: '_id', as: 'owner' } },
+      { $lookup: { from: 'users', localField: 'users._id', foreignField: '_id', as: 'users' } },
+    ]);
     if (!result) {
       return res.status(404).send({ name: 'not found' });
     }
-    return res.send(result);
+    const family = result[0];
+    return res.send(family);
   } catch (e) {
     return next(e);
   }
@@ -96,16 +101,18 @@ familyRouter.post('/', auth, async (req, res, next) => {
   }
 });
 
-familyRouter.patch('/:id/toggleDelete', auth, async (req, res, next) => {
+familyRouter.patch('/:id/toggleDelete/', auth, async (req, res, next) => {
   try {
     const token = req.get('Authorization');
     const user = await User.findOne({ token: token });
-    if (!user) return res.status(404).send({ name: 'not found' });
-
+    if (!user) {
+      return res.status(404).send({ name: 'not found 1' });
+    }
     const id = req.params.id as string;
     const result = await Family.findOne({ _id: id });
-    if (!result) return res.status(404).send({ name: 'not found' });
-
+    if (!result) {
+      return res.status(404).send({ name: 'not found 2' });
+    }
     if (user._id !== result.owner) {
       const update = await Family.findOne({ _id: id, users: { $elemMatch: { _id: user._id } } });
       if (!update) {
@@ -113,6 +120,8 @@ familyRouter.patch('/:id/toggleDelete', auth, async (req, res, next) => {
       }
       await Family.updateOne({ _id: id }, { $pull: { users: { _id: user._id } } });
       return res.send(update);
+    } else if (user._id === result.owner) {
+      await Family.updateOne({ _id: id }, { $pull: { users: { _id: user._id } } });
     }
   } catch (e) {
     return next(e);

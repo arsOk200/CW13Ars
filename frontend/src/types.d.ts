@@ -76,14 +76,10 @@ export interface FamilyList {
 export interface FamilyOne {
   _id: string;
   name: string;
-  owner: User;
-  users: {
-    user: User;
-  }[];
-  products: {
-    product: ProductList;
-  }[];
-}
+  owner: User[];
+  users: User[];
+  products: ProductList[];
+};
 export interface FamilyMutation {
   name: string;
 }

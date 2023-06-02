@@ -1,4 +1,4 @@
-import { FamilyList, FamilyMutation, GlobalError, ValidationError } from '../../types';
+import { FamilyList, FamilyMutation, FamilyOne, GlobalError, ValidationError } from '../../types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
 import { isAxiosError } from 'axios';
@@ -10,8 +10,8 @@ export const fetchFamily = createAsyncThunk<FamilyList[]>('family/fetch_family',
   return response.data;
 });
 
-export const fetchOneFamily = createAsyncThunk<FamilyList, string>('family/fetchOne', async (id) => {
-  const response = await axiosApi.get<FamilyList | null>('/family/' + id);
+export const fetchOneFamily = createAsyncThunk<FamilyOne, string>('family/fetchOne', async (id) => {
+  const response = await axiosApi.get<FamilyOne | null>('/family/' + id);
   if (response.data === null) {
     throw new Error('not found');
   }

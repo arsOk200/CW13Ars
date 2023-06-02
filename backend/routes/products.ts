@@ -31,7 +31,7 @@ productsRouter.get('/', async (req, res, next) => {
 
 productsRouter.get('/:id', async (req, res, next) => {
   try {
-    const result = await Product.findById(req.params.id);
+    const result = await Product.findById(req.params.id).populate('category');
     if (!result) {
       return res.sendStatus(404);
     }
@@ -93,13 +93,12 @@ productsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
   const id = req.params.id as string;
   try {
     const product = await Product.findById(id);
+
     if (!product) {
       return res.status(404).send({ error: 'Product not found' });
     }
-    if (product.image) {
-      await fs.unlink(path.join(config.publicPath, `/images/${product.image}`));
-    }
-    const result = await Product.deleteOne({ id });
+    await fs.unlink(path.join(config.publicPath, `/images/${product.image}`));
+    const result = await Product.deleteOne({ _id: id });
     return res.send(result);
   } catch (e) {
     await Product.deleteOne({ _id: id });

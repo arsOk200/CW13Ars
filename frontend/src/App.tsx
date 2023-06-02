@@ -13,7 +13,8 @@ import CreateCategory from './components/Categories/CreateCategory';
 import { ToastContainer } from 'react-toastify';
 import Family from './containers/Family';
 import Notes from './containers/Notes';
-import Notifications from './containers/Notifications';
+import ProductPage from './components/Products/RroductPage';
+import FamilyPage from './components/Family/FamilyPage';
 
 function App() {
   const user = useAppSelector(selectUser);
@@ -31,14 +32,13 @@ function App() {
         </Route>
         <Route element={<Protected userRole={user?.role} priority="user" />}>
           <Route path="/family" element={<Family />} />
-          <Route path="/family/:id" element={<NotFound />} />
+          <Route path="/family/:id" element={<FamilyPage />} />
           <Route path="/notes" element={<Notes />} />
-          <Route path="/notifications" element={<Notifications />} />
         </Route>
         <Route path="/category/:id" element={<Products />} />
         <Route path="/" element={<Products />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/product/:id" element={<NotFound />} />
+        <Route path="/product/:id" element={<ProductPage />} />
       </Routes>
       <ToastContainer
         position="bottom-left"
