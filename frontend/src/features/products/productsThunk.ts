@@ -23,6 +23,19 @@ export const fetchOneProduct = createAsyncThunk<ProductList, string>('product/fe
   return response.data;
 });
 
+export const addToCart = createAsyncThunk<void, string>('product/addToCart', async (id) => {
+  await axiosApi.patch('/cart/' + id + '/toggleCart');
+});
+
+interface ToUsersCart {
+  idFamily: string;
+  idProduct: string;
+}
+
+export const addToUsersCart = createAsyncThunk<void, ToUsersCart>('product/addToUsersCart', async (params) => {
+  await axiosApi.patch('/family/' + params.idFamily + '/toggleAddTo?product=' + params.idProduct);
+});
+
 interface UpdateParams {
   id: string;
   name: ProductMutation;

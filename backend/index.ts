@@ -6,6 +6,8 @@ import usersRouter from './routes/users';
 import categoriesRouter from './routes/categories';
 import productsRouter from './routes/products';
 import familyRouter from './routes/family';
+import notesRouter from './routes/notes';
+import cartRouter from './routes/carts';
 
 const app = express();
 const port = 8000;
@@ -16,6 +18,8 @@ app.use('/users', usersRouter);
 app.use('/category', categoriesRouter);
 app.use('/products', productsRouter);
 app.use('/family', familyRouter);
+app.use('/notes', notesRouter);
+app.use('/cart', cartRouter);
 
 const run = async () => {
   mongoose.set('strictQuery', false);

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ProductItem from './ProductItem';
-import { CircularProgress, Container, Typography } from '@mui/material';
+import { Button, CircularProgress, Container, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
+  selectAddingToMyCart,
   selectDeletingProduct,
   selectGetAllProductLoading,
   selectOneProduct,
@@ -10,7 +11,14 @@ import {
   selectProductList,
   selectUpdateProductLoading,
 } from '../../features/products/productsSlice';
-import { fetchOneProduct, fetchProduct, removeProduct, updateProduct } from '../../features/products/productsThunk';
+import {
+  addToCart,
+  addToUsersCart,
+  fetchOneProduct,
+  fetchProduct,
+  removeProduct,
+  updateProduct,
+} from '../../features/products/productsThunk';
 import BackHandIcon from '@mui/icons-material/BackHand';
 import { useParams } from 'react-router-dom';
 import useConfirm from '../Confirm&Alert/useConfirm';
@@ -18,6 +26,10 @@ import { ProductMutation } from '../../types';
 import { toast } from 'react-toastify';
 import ModalBody from '../ModalBody';
 import ProductForm from './ProductForm';
+import { fetchUsersFamilies } from '../../features/family/familyThunk';
+import { selectUser } from '../../features/user/userSlice';
+import FamilyModalItem from '../Family/FamilyModalItem';
+import { selectUsersFamilies, selectUsersFamiliesLoading } from '../../features/family/familySlice';
 
 const ProductsList = () => {
   const dispatch = useAppDispatch();
@@ -27,8 +39,15 @@ const ProductsList = () => {
   const product = useAppSelector(selectOneProduct);
   const updateLoading = useAppSelector(selectUpdateProductLoading);
   const error = useAppSelector(selectProductError);
+  const user = useAppSelector(selectUser);
+  const usersFamilyLoading = useAppSelector(selectUsersFamiliesLoading);
+
+  const usersFamilies = useAppSelector(selectUsersFamilies);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [DialogForCart, setDialogForCart] = useState(false);
   const [IDFor, setIdFor] = useState('');
+  const addingToUsersCart = useAppSelector(selectAddingToMyCart);
+  const [productID, setProductID] = useState('');
   const { id } = useParams();
   const { confirm } = useConfirm();
 
@@ -43,6 +62,22 @@ const ProductsList = () => {
       toast('Product deleted');
     } else {
       return;
+    }
+  };
+
+  const AddToMyCart = async () => {
+    await dispatch(addToCart(productID));
+  };
+
+  const AddTofamilyCart = async (IDFamily: string) => {
+    await dispatch(addToUsersCart({ idProduct: productID, idFamily: IDFamily }));
+  };
+
+  const openDialogForCart = async (ID: string) => {
+    if (user) {
+      await dispatch(fetchUsersFamilies(user._id));
+      setProductID(ID);
+      setDialogForCart(true);
     }
   };
 
@@ -81,6 +116,7 @@ const ProductsList = () => {
               deleteProduct={() => deleteProduct(product._id)}
               deletingProduct={deletingProduct}
               onEditing={() => openDialog(product._id)}
+              openDialog={() => openDialogForCart(product._id)}
             />
           ))
         ) : (
@@ -103,6 +139,35 @@ const ProductsList = () => {
             isEdit
             Loading={updateLoading}
           />
+        </ModalBody>
+      )}
+      {DialogForCart && (
+        <ModalBody isOpen={DialogForCart} onClose={() => setDialogForCart(false)}>
+          <Container sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Button color="success" disabled={addingToUsersCart} onClick={() => AddToMyCart()}>
+              Add to My Cart
+            </Button>
+            {!usersFamilyLoading ? (
+              usersFamilies.length !== 0 ? (
+                usersFamilies.map((family) => (
+                  <FamilyModalItem
+                    key={family._id}
+                    family={family}
+                    addToFamilyCart={() => AddTofamilyCart(family._id)}
+                  />
+                ))
+              ) : (
+                <>
+                  <BackHandIcon fontSize="large" />
+                  <Typography variant="h5" sx={{ marginLeft: '5px' }}>
+                    There are no families at the moment!
+                  </Typography>
+                </>
+              )
+            ) : (
+              <CircularProgress />
+            )}
+          </Container>
         </ModalBody>
       )}
     </Container>

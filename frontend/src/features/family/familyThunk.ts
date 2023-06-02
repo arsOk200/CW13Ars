@@ -18,6 +18,14 @@ export const fetchOneFamily = createAsyncThunk<FamilyOne, string>('family/fetchO
   return response.data;
 });
 
+export const fetchUsersFamilies = createAsyncThunk<FamilyOne[], string>('family/fetchUsersFamilies', async (id) => {
+  const response = await axiosApi.get<FamilyOne[] | null>('/family/find/' + id);
+  if (response.data === null) {
+    throw new Error('not found');
+  }
+  return response.data;
+});
+
 interface UpdateParams {
   id: string;
   name: FamilyMutation;

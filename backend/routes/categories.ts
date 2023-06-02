@@ -73,7 +73,7 @@ categoriesRouter.delete('/:id', auth, permit('admin'), async (req, res, next) =>
     const _id = req.params.id as string;
     const category = await Category.findOne({ _id });
     if (!category) {
-      return res.status(404).send({ error: 'Сategory is connected to other entities! Deletion canceled' });
+      return res.status(403).send({ error: 'Сategory is connected to other entities! Deletion canceled' });
     }
     const result = await Category.deleteOne({ _id });
     return res.send(result);

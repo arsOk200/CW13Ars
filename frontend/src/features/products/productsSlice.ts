@@ -1,7 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { GlobalError, ProductList, ValidationError } from '../../types';
-import { createProduct, fetchOneProduct, fetchProduct, removeProduct, updateProduct } from './productsThunk';
+import {
+  addToCart,
+  addToUsersCart,
+  createProduct,
+  fetchOneProduct,
+  fetchProduct,
+  removeProduct,
+  updateProduct,
+} from './productsThunk';
 
 interface productSlice {
   listProduct: ProductList[];
@@ -15,6 +23,8 @@ interface productSlice {
   oneProduct: null | ProductList;
   updateProductLoading: boolean;
   oneProductLoading: boolean;
+  adddingToMyCartLoadding: boolean;
+  addingToFamiliesCart: boolean;
 }
 
 const initialState: productSlice = {
@@ -29,6 +39,8 @@ const initialState: productSlice = {
   updateProductLoading: false,
   oneProductLoading: false,
   deletingProduct: false,
+  adddingToMyCartLoadding: false,
+  addingToFamiliesCart: false,
 };
 
 const productSlice = createSlice({
@@ -79,6 +91,26 @@ const productSlice = createSlice({
       state.productError = error || null;
     });
 
+    builder.addCase(addToCart.pending, (state) => {
+      state.adddingToMyCartLoadding = true;
+    });
+    builder.addCase(addToCart.fulfilled, (state) => {
+      state.adddingToMyCartLoadding = false;
+    });
+    builder.addCase(addToCart.rejected, (state) => {
+      state.adddingToMyCartLoadding = false;
+    });
+
+    builder.addCase(addToUsersCart.pending, (state) => {
+      state.addingToFamiliesCart = true;
+    });
+    builder.addCase(addToUsersCart.fulfilled, (state) => {
+      state.addingToFamiliesCart = false;
+    });
+    builder.addCase(addToUsersCart.rejected, (state) => {
+      state.addingToFamiliesCart = false;
+    });
+
     builder.addCase(createProduct.pending, (state) => {
       state.productError = null;
       state.createProductLoading = true;
@@ -119,3 +151,5 @@ export const selectModal = (state: RootState) => state.product.modal;
 export const selectOneProduct = (state: RootState) => state.product.oneProduct;
 export const selectOneProductLoading = (state: RootState) => state.product.oneProductLoading;
 export const selectUpdateProductLoading = (state: RootState) => state.product.updateProductLoading;
+export const selectAddingToMyCart = (state: RootState) => state.product.adddingToMyCartLoadding;
+export const selectAddToUsersCart = (state: RootState) => state.product.addingToFamiliesCart;

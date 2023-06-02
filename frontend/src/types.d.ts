@@ -79,7 +79,7 @@ export interface FamilyOne {
   owner: User[];
   users: User[];
   products: ProductList[];
-};
+}
 export interface FamilyMutation {
   name: string;
 }

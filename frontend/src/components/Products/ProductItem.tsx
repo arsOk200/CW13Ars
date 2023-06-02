@@ -18,9 +18,10 @@ interface Props {
   deleteProduct: React.MouseEventHandler;
   deletingProduct: string | false;
   onEditing: React.MouseEventHandler;
+  openDialog: React.MouseEventHandler;
 }
 
-const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct, onEditing }) => {
+const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct, onEditing, openDialog }) => {
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
   let buttons = (
@@ -35,7 +36,7 @@ const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct,
     buttons = (
       <>
         <Button size="small" sx={{ color: 'black' }}>
-          <ShoppingBasketIcon />
+          <ShoppingBasketIcon onClick={openDialog} />
         </Button>
         <Button
           disabled={deletingProduct ? deletingProduct === product._id : false}
@@ -53,7 +54,7 @@ const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct,
   } else if (user?.role === 'user') {
     buttons = (
       <Button size="small" sx={{ color: 'black' }}>
-        <ShoppingBasketIcon onClick={() => navigate('/product/' + product._id)} />
+        <ShoppingBasketIcon onClick={openDialog} />
       </Button>
     );
   }

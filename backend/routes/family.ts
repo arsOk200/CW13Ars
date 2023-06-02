@@ -3,11 +3,30 @@ import Family from '../models/Family';
 import auth from '../middleware/auth';
 import User from '../models/User';
 import mongoose, { Types } from 'mongoose';
+import Product from '../models/Product';
 const familyRouter = express.Router();
 
 familyRouter.get('/', auth, async (req, res, next) => {
   try {
     const result = await Family.find().populate('owner users');
+    return res.send(result);
+  } catch (e) {
+    return next(e);
+  }
+});
+
+familyRouter.get('/find/:id', auth, async (req, res, next) => {
+  try {
+    const id = req.params.id as string;
+    const result = await Family.aggregate([
+      { $lookup: { from: 'users', localField: 'users._id', foreignField: '_id', as: 'users' } },
+      {
+        $match: { users: { $elemMatch: { _id: new Types.ObjectId(id) } } },
+      },
+    ]);
+    if (!result) {
+      return res.status(404).send({ name: 'not found' });
+    }
     return res.send(result);
   } catch (e) {
     return next(e);
@@ -96,6 +115,73 @@ familyRouter.post('/', auth, async (req, res, next) => {
     });
     await Data.save();
     return res.send({ message: 'Created' });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+familyRouter.patch('/:id/toggleAddTo', auth, async (req, res, next) => {
+  try {
+    const product = req.query.product;
+    if (!product) {
+      return res.status(400);
+    }
+    console.log(req.params.id, product);
+    const ProductToAdd = await Product.findOne({ _id: product });
+    if (!ProductToAdd) {
+      return res.status(400);
+    }
+    const token = req.get('Authorization');
+    const user = await User.findOne({ token: token });
+    if (!user) {
+      return res.status(404).send({ name: 'not found 1' });
+    }
+    const id = req.params.id as string;
+    const result = await Family.findOne({ _id: id });
+    if (!result) {
+      return res.status(404).send({ name: 'not found 2' });
+    }
+    if (result) {
+      const update = await Family.updateOne({ _id: id }, { $push: { cart: ProductToAdd } });
+      return res.send(update);
+    } else {
+      return res.status(404).send({ message: 'not found' });
+    }
+  } catch (e) {
+    return next(e);
+  }
+});
+
+familyRouter.patch('/:id/toggleDeleteFromCart/', auth, async (req, res, next) => {
+  try {
+    const product = req.query.product;
+    if (!product) {
+      return res.status(400);
+    }
+    const ProductToAdd = await Product.findOne({ _id: product });
+    if (!ProductToAdd) {
+      return res.status(400);
+    }
+    const token = req.get('Authorization');
+    const user = await User.findOne({ token: token });
+    if (!user) {
+      return res.status(404).send({ name: 'not found 1' });
+    }
+    const id = req.params.id as string;
+    const result = await Family.findOne({ _id: id });
+    if (!result) {
+      return res.status(404).send({ name: 'not found 2' });
+    }
+    if (user._id !== result.owner) {
+      const update = await Family.findOne({ _id: id, users: { $elemMatch: { _id: user._id } } });
+      if (!update) {
+        return res.status(403);
+      }
+      await Family.updateOne({ _id: id }, { $pull: { cart: { _id: ProductToAdd._id } } });
+      return res.send(update);
+    } else if (user._id === result.owner) {
+      await Family.updateOne({ _id: id }, { $pull: { cart: { _id: ProductToAdd._id } } });
+    }
   } catch (e) {
     return next(e);
   }

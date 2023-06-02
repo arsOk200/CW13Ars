@@ -9,6 +9,7 @@ import {
   updateFamily,
   addToFamily,
   LeaveFromFamily,
+  fetchUsersFamilies,
 } from './familyThunk';
 
 interface familySlice {
@@ -25,6 +26,8 @@ interface familySlice {
   oneFamilyLoading: boolean;
   addingToFamily: string | false;
   leavingFromFamily: string | false;
+  usersFamilies: FamilyOne[];
+  usersFamiliesLoading: boolean;
 }
 
 const initialState: familySlice = {
@@ -41,6 +44,8 @@ const initialState: familySlice = {
   deletingFamily: false,
   addingToFamily: false,
   leavingFromFamily: false,
+  usersFamilies: [],
+  usersFamiliesLoading: false,
 };
 
 const familySlice = createSlice({
@@ -67,6 +72,17 @@ const familySlice = createSlice({
     });
     builder.addCase(fetchFamily.rejected, (state) => {
       state.getAllFamilyLoading = false;
+    });
+
+    builder.addCase(fetchUsersFamilies.pending, (state) => {
+      state.usersFamiliesLoading = true;
+    });
+    builder.addCase(fetchUsersFamilies.fulfilled, (state, { payload: list }) => {
+      state.usersFamilies = list;
+      state.usersFamiliesLoading = false;
+    });
+    builder.addCase(fetchUsersFamilies.rejected, (state) => {
+      state.usersFamiliesLoading = false;
     });
 
     builder.addCase(fetchOneFamily.pending, (state) => {
@@ -150,3 +166,5 @@ export const selectModal = (state: RootState) => state.family.modal;
 export const selectOneFamily = (state: RootState) => state.family.oneFamily;
 export const selectOneFamilyLoading = (state: RootState) => state.family.oneFamilyLoading;
 export const selectUpdateFamilyLoading = (state: RootState) => state.family.updateFamilyLoading;
+export const selectUsersFamiliesLoading = (state: RootState) => state.family.usersFamiliesLoading;
+export const selectUsersFamilies = (state: RootState) => state.family.usersFamilies;
