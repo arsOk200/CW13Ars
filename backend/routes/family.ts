@@ -190,13 +190,11 @@ familyRouter.patch('/:id/toggleDeleteFromCart', auth, async (req, res, next) => 
 familyRouter.patch('/:id/toggleDelete', auth, async (req, res, next) => {
   try {
     const userForDelete = req.query.user;
-    console.log(userForDelete);
     const id = req.params.id as string;
     if (!userForDelete) {
       return res.status(400);
     }
     const user = await User.findById(userForDelete);
-    console.log(user);
     if (!user) {
       return res.status(404).send({ name: 'user not found' });
     }

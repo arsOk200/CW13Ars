@@ -7,7 +7,7 @@ interface NoteSlice {
   listNote: NoteList[];
   getAllNoteLoading: boolean;
   createNoteLoading: boolean;
-  removeNoteLoading: boolean;
+  removeNoteLoading: string | false;
   NoteError: ValidationError | null;
   errorRemove: GlobalError | null;
   modal: boolean;
@@ -89,8 +89,8 @@ const NoteSlice = createSlice({
       state.createNoteLoading = false;
     });
 
-    builder.addCase(removeNote.pending, (state) => {
-      state.removeNoteLoading = true;
+    builder.addCase(removeNote.pending, (state, { meta: { arg: id } }) => {
+      state.removeNoteLoading = id;
     });
     builder.addCase(removeNote.fulfilled, (state) => {
       state.removeNoteLoading = false;

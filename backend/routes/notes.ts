@@ -2,19 +2,18 @@ import express from 'express';
 import Note from '../models/Note';
 import mongoose from 'mongoose';
 import auth from '../middleware/auth';
-import permit from '../middleware/permit';
 import User from '../models/User';
 
 const notesRouter = express.Router();
 
-notesRouter.get('/', async (req, res, next) => {
+notesRouter.get('/', auth, async (req, res, next) => {
   try {
     const token = req.get('Authorization');
     const user = await User.findOne({ token: token });
     if (!user) {
       return res.status(403);
     }
-    const notes = await Note.find({ user: user._id });
+    const notes = await Note.find({ user: user._id }).sort({ _id: -1 });
     return res.send(notes);
   } catch (e) {
     return next(e);
@@ -25,7 +24,7 @@ notesRouter.get('/:id', auth, async (req, res, next) => {
   try {
     const result = await Note.findOne({ _id: req.params.id });
     if (!result) {
-      return res.status(404).send({ error: 'area not found!' });
+      return res.status(404).send({ error: 'note not found!' });
     }
     return res.send(result);
   } catch (e) {
@@ -35,7 +34,8 @@ notesRouter.get('/:id', auth, async (req, res, next) => {
 
 notesRouter.put('/:id', auth, async (req, res, next) => {
   const edit = {
-    name: req.body.name,
+    text: req.body.text,
+    title: req.body.title,
   };
   try {
     const id = req.params.id as string;
@@ -43,7 +43,7 @@ notesRouter.put('/:id', auth, async (req, res, next) => {
     if (!result) {
       return res.status(404).send({ error: 'not found!' });
     }
-    await Note.updateOne({ _id: id }, { name: edit.name });
+    await Note.updateOne({ _id: id }, { text: edit.text, title: edit.title });
     return res.send(result);
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
@@ -55,9 +55,15 @@ notesRouter.put('/:id', auth, async (req, res, next) => {
 
 notesRouter.post('/', auth, async (req, res, next) => {
   try {
+    const token = req.get('Authorization');
+    const user = await User.findOne({ token: token });
+    if (!user) {
+      return res.status(403);
+    }
     const Data = new Note({
-      name: req.body.name,
-      text: req.body.name,
+      user: user._id.toString(),
+      title: req.body.title,
+      text: req.body.text,
     });
     await Data.save();
     return res.send(Data);
@@ -70,7 +76,7 @@ notesRouter.post('/', auth, async (req, res, next) => {
   }
 });
 
-notesRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+notesRouter.delete('/:id', auth, async (req, res, next) => {
   try {
     const _id = req.params.id as string;
     const note = await Note.findOne({ _id });

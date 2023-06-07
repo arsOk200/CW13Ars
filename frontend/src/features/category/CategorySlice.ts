@@ -7,7 +7,7 @@ interface categorySlice {
   listCategory: CategoryList[];
   getAllCategoryLoading: boolean;
   createCategoryLoading: boolean;
-  removeCategoryLoading: boolean;
+  removeCategoryLoading: string | false;
   categoryError: ValidationError | null;
   errorRemove: GlobalError | null;
   modal: boolean;
@@ -89,8 +89,8 @@ const categorySlice = createSlice({
       state.createCategoryLoading = false;
     });
 
-    builder.addCase(removeCategory.pending, (state) => {
-      state.removeCategoryLoading = true;
+    builder.addCase(removeCategory.pending, (state, { meta: { arg: id } }) => {
+      state.removeCategoryLoading = id;
     });
     builder.addCase(removeCategory.fulfilled, (state) => {
       state.removeCategoryLoading = false;

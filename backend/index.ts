@@ -10,7 +10,7 @@ import notesRouter from './routes/notes';
 import cartRouter from './routes/carts';
 
 const app = express();
-const port = 8000;
+const port = 8005;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
@@ -18,7 +18,7 @@ app.use('/users', usersRouter);
 app.use('/category', categoriesRouter);
 app.use('/products', productsRouter);
 app.use('/family', familyRouter);
-app.use('/notes', notesRouter);
+app.use('/note', notesRouter);
 app.use('/cart', cartRouter);
 
 const run = async () => {

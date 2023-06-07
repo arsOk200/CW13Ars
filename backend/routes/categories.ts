@@ -19,7 +19,7 @@ categoriesRouter.get('/:id', auth, permit('admin'), async (req, res, next) => {
   try {
     const result = await Category.findOne({ _id: req.params.id });
     if (!result) {
-      return res.status(404).send({ error: 'area not found!' });
+      return res.status(404).send({ error: 'not found!' });
     }
     return res.send(result);
   } catch (e) {

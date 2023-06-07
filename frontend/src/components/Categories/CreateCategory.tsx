@@ -29,6 +29,7 @@ import {
   selectCreateCategoryLoading,
   selectGetAllCategoryLoading,
   selectOneCategory,
+  selectRemoveCategoryLoading,
   selectUpdateCategoryLoading,
 } from '../../features/category/CategorySlice';
 import CategoryForm from './CategoryForm';
@@ -42,6 +43,7 @@ const CreateCategory = () => {
   const existingCategory = useAppSelector(selectOneCategory);
   const createLoading = useAppSelector(selectCreateCategoryLoading);
   const updateLoading = useAppSelector(selectUpdateCategoryLoading);
+  const removeLoading = useAppSelector(selectRemoveCategoryLoading);
   const categories = useAppSelector(selectCategoryList);
   const fetchLoading = useAppSelector(selectGetAllCategoryLoading);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -119,6 +121,7 @@ const CreateCategory = () => {
                           category={category}
                           removeCategoryItem={() => removeCardCategory(category._id)}
                           onEditing={() => openDialog(category._id)}
+                          deleteLoading={removeLoading}
                         />
                       ))
                     ) : (

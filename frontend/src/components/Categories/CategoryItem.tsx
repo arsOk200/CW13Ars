@@ -1,27 +1,30 @@
 import React from 'react';
 import { CircularProgress, IconButton, TableCell } from '@mui/material';
 import { CategoryList } from '../../types';
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useAppSelector } from '../../app/hooks';
-import { selectRemoveCategoryLoading } from '../../features/category/CategorySlice';
 import { StyledTableRow } from '../../constants';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
   category: CategoryList;
   removeCategoryItem: React.MouseEventHandler;
   onEditing: React.MouseEventHandler;
+  deleteLoading: string | false;
 }
 
-const CategoryItem: React.FC<Props> = ({ category, removeCategoryItem, onEditing }) => {
-  const removeLoading = useAppSelector(selectRemoveCategoryLoading);
+const CategoryItem: React.FC<Props> = ({ category, removeCategoryItem, onEditing, deleteLoading }) => {
   return (
     <>
       <StyledTableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell align="left">{category.name}</TableCell>
         <TableCell align="right">
-          <IconButton disabled={removeLoading} onClick={removeCategoryItem} aria-label="delete">
-            {!removeLoading ? <DeleteIcon /> : <CircularProgress />}
+          <IconButton
+            disabled={deleteLoading ? deleteLoading === category._id : false}
+            onClick={removeCategoryItem}
+            aria-label="delete"
+          >
+            {deleteLoading && deleteLoading === category._id && <CircularProgress />}
+            <DeleteIcon />
           </IconButton>
           <IconButton aria-label="success" onClick={onEditing}>
             <EditIcon />

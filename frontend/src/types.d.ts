@@ -91,7 +91,6 @@ export interface NoteList {
 }
 
 export interface NoteMutation {
-  user: string;
   text: string;
   title: string;
 }
