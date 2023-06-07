@@ -19,7 +19,6 @@ const CartSchema = new Schema({
         products: {
           type: Schema.Types.ObjectId,
           ref: 'Products',
-          required: true,
           validate: {
             validator: (value: Types.ObjectId) => Product.findById(value),
             message: 'product is not found !',

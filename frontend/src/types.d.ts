@@ -78,8 +78,20 @@ export interface FamilyOne {
   name: string;
   owner: User[];
   users: User[];
-  products: ProductList[];
+  cart: ProductList[];
 }
 export interface FamilyMutation {
   name: string;
+}
+export interface NoteList {
+  _id: string;
+  user: User;
+  text: string;
+  title: string;
+}
+
+export interface NoteMutation {
+  user: string;
+  text: string;
+  title: string;
 }

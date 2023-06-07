@@ -50,18 +50,17 @@ const FamilyItem: React.FC<Props> = ({ family, deleteFamily, deletingFamily, onE
       </>
     );
   }
-  if (user._id === family.owner._id) {
-    secondButtons = <></>;
+
+  if (find) {
+    secondButtons = (
+      <Button size="small" sx={{ color: 'black' }} onClick={leaveFamily}>
+        <ExitToAppIcon />
+      </Button>
+    );
   } else if (!find) {
     secondButtons = (
       <Button size="small" sx={{ color: 'black' }} onClick={getInFamily}>
         <PersonAddIcon />
-      </Button>
-    );
-  } else if (find) {
-    secondButtons = (
-      <Button size="small" sx={{ color: 'black' }}>
-        <ExitToAppIcon onClick={leaveFamily} />
       </Button>
     );
   }

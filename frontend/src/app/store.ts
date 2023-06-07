@@ -6,6 +6,7 @@ import { usersReducer } from '../features/user/userSlice';
 import { categoryReducer } from '../features/category/CategorySlice';
 import { productReducer } from '../features/products/productsSlice';
 import { familyReducer } from '../features/family/familySlice';
+import { NoteReducer } from '../features/notes/noteSlice';
 
 const usersPersistConfig = {
   key: 'OnlineShop:users',
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   category: categoryReducer,
   product: productReducer,
   family: familyReducer,
+  Note: NoteReducer,
 });
 
 export const store = configureStore({

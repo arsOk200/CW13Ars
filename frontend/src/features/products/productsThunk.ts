@@ -32,6 +32,12 @@ interface ToUsersCart {
   idProduct: string;
 }
 
+export const removeFromUsersCart = createAsyncThunk<void, ToUsersCart>(
+  'product/removeFromUsersCart',
+  async (params) => {
+    await axiosApi.patch('/family/' + params.idFamily + '/toggleDeleteFromCart?product=' + params.idProduct);
+  },
+);
 export const addToUsersCart = createAsyncThunk<void, ToUsersCart>('product/addToUsersCart', async (params) => {
   await axiosApi.patch('/family/' + params.idFamily + '/toggleAddTo?product=' + params.idProduct);
 });

@@ -67,10 +67,12 @@ const ProductsList = () => {
 
   const AddToMyCart = async () => {
     await dispatch(addToCart(productID));
+    setDialogForCart(false);
   };
 
   const AddTofamilyCart = async (IDFamily: string) => {
     await dispatch(addToUsersCart({ idProduct: productID, idFamily: IDFamily }));
+    setDialogForCart(false);
   };
 
   const openDialogForCart = async (ID: string) => {

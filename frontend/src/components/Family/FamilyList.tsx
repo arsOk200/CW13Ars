@@ -11,7 +11,7 @@ import {
   selectFamilyList,
   selectUpdateFamilyLoading,
 } from '../../features/family/familySlice';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import useConfirm from '../Confirm&Alert/useConfirm';
 import {
   fetchOneFamily,
@@ -25,8 +25,10 @@ import { toast } from 'react-toastify';
 import { FamilyMutation } from '../../types';
 import ModalBody from '../ModalBody';
 import FamilyForm from './FamilyForm';
+import { selectUser } from '../../features/user/userSlice';
 
 const FamilyList = () => {
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const family = useAppSelector(selectFamilyList);
   const familyLoading = useAppSelector(selectGetAllFamilyLoading);
@@ -58,12 +60,6 @@ const FamilyList = () => {
     await dispatch(fetchFamily());
   };
 
-  const LeaveFromGroup = async (FamilyId: string) => {
-    if (await confirm('', 'Do you really want to Join?')) {
-      await dispatch(LeaveFromFamily(FamilyId));
-      await dispatch(fetchFamily());
-    }
-  };
   const openDialog = async (ID: string) => {
     await dispatch(fetchOneFamily(ID));
     setIdFor(ID);
@@ -82,6 +78,15 @@ const FamilyList = () => {
       }
     } else {
       return;
+    }
+  };
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+  const LeaveFromGroup = async (FamilyId: string) => {
+    if (await confirm('', 'Do you really want to Leave?')) {
+      await dispatch(LeaveFromFamily({ familyID: FamilyId, userID: user._id }));
+      await dispatch(fetchFamily());
     }
   };
   return (

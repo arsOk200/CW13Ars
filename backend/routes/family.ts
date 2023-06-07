@@ -40,6 +40,7 @@ familyRouter.get('/:id', auth, async (req, res, next) => {
       { $match: { _id: new Types.ObjectId(id) } },
       { $lookup: { from: 'users', localField: 'owner', foreignField: '_id', as: 'owner' } },
       { $lookup: { from: 'users', localField: 'users._id', foreignField: '_id', as: 'users' } },
+      { $lookup: { from: 'products', localField: 'cart._id', foreignField: '_id', as: 'cart' } },
     ]);
     if (!result) {
       return res.status(404).send({ name: 'not found' });
@@ -126,7 +127,6 @@ familyRouter.patch('/:id/toggleAddTo', auth, async (req, res, next) => {
     if (!product) {
       return res.status(400);
     }
-    console.log(req.params.id, product);
     const ProductToAdd = await Product.findOne({ _id: product });
     if (!ProductToAdd) {
       return res.status(400);
@@ -152,7 +152,7 @@ familyRouter.patch('/:id/toggleAddTo', auth, async (req, res, next) => {
   }
 });
 
-familyRouter.patch('/:id/toggleDeleteFromCart/', auth, async (req, res, next) => {
+familyRouter.patch('/:id/toggleDeleteFromCart', auth, async (req, res, next) => {
   try {
     const product = req.query.product;
     if (!product) {
@@ -187,22 +187,27 @@ familyRouter.patch('/:id/toggleDeleteFromCart/', auth, async (req, res, next) =>
   }
 });
 
-familyRouter.patch('/:id/toggleDelete/', auth, async (req, res, next) => {
+familyRouter.patch('/:id/toggleDelete', auth, async (req, res, next) => {
   try {
-    const token = req.get('Authorization');
-    const user = await User.findOne({ token: token });
-    if (!user) {
-      return res.status(404).send({ name: 'not found 1' });
-    }
+    const userForDelete = req.query.user;
+    console.log(userForDelete);
     const id = req.params.id as string;
+    if (!userForDelete) {
+      return res.status(400);
+    }
+    const user = await User.findById(userForDelete);
+    console.log(user);
+    if (!user) {
+      return res.status(404).send({ name: 'user not found' });
+    }
     const result = await Family.findOne({ _id: id });
     if (!result) {
-      return res.status(404).send({ name: 'not found 2' });
+      return res.status(404).send({ name: 'family not found ' });
     }
     if (user._id !== result.owner) {
       const update = await Family.findOne({ _id: id, users: { $elemMatch: { _id: user._id } } });
       if (!update) {
-        return res.status(403);
+        return res.status(403).send({ name: 'You are not in family' });
       }
       await Family.updateOne({ _id: id }, { $pull: { users: { _id: user._id } } });
       return res.send(update);

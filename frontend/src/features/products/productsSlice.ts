@@ -7,6 +7,7 @@ import {
   createProduct,
   fetchOneProduct,
   fetchProduct,
+  removeFromUsersCart,
   removeProduct,
   updateProduct,
 } from './productsThunk';
@@ -25,6 +26,7 @@ interface productSlice {
   oneProductLoading: boolean;
   adddingToMyCartLoadding: boolean;
   addingToFamiliesCart: boolean;
+  deletingFromUsersCart: boolean;
 }
 
 const initialState: productSlice = {
@@ -41,6 +43,7 @@ const initialState: productSlice = {
   deletingProduct: false,
   adddingToMyCartLoadding: false,
   addingToFamiliesCart: false,
+  deletingFromUsersCart: false,
 };
 
 const productSlice = createSlice({
@@ -123,6 +126,15 @@ const productSlice = createSlice({
       state.createProductLoading = false;
     });
 
+    builder.addCase(removeFromUsersCart.pending, (state) => {
+      state.deletingFromUsersCart = true;
+    });
+    builder.addCase(removeFromUsersCart.fulfilled, (state) => {
+      state.deletingFromUsersCart = false;
+    });
+    builder.addCase(removeFromUsersCart.rejected, (state) => {
+      state.deletingFromUsersCart = false;
+    });
     builder.addCase(removeProduct.pending, (state, { meta: { arg: productID } }) => {
       state.removeProductLoading = true;
       state.deletingProduct = productID;

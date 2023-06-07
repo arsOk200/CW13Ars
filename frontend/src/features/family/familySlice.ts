@@ -141,9 +141,19 @@ const familySlice = createSlice({
     builder.addCase(addToFamily.rejected, (state) => {
       state.addingToFamily = false;
     });
-    builder.addCase(LeaveFromFamily.pending, (state, { meta: { arg: id } }) => {
-      state.leavingFromFamily = id;
-    });
+    builder.addCase(
+      LeaveFromFamily.pending,
+      (
+        state,
+        {
+          meta: {
+            arg: { familyID: id },
+          },
+        },
+      ) => {
+        state.leavingFromFamily = id;
+      },
+    );
     builder.addCase(LeaveFromFamily.fulfilled, (state) => {
       state.leavingFromFamily = false;
     });

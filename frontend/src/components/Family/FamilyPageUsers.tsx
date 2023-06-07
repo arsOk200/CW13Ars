@@ -8,13 +8,14 @@ import { selectUser } from '../../features/user/userSlice';
 interface Props {
   user: User;
   Leave: React.MouseEventHandler;
+  owner: User | undefined;
 }
 
-const FamilyPageUsers: React.FC<Props> = ({ user, Leave }) => {
+const FamilyPageUsers: React.FC<Props> = ({ user, Leave, owner }) => {
   const CurentUser = useAppSelector(selectUser);
   let buttons;
 
-  if (user._id === CurentUser?._id) {
+  if (user._id === CurentUser?._id || owner?._id === CurentUser?._id) {
     buttons = (
       <IconButton aria-label="delete" onClick={Leave}>
         <DeleteIcon />

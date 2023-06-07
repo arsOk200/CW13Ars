@@ -82,6 +82,11 @@ export const addToFamily = createAsyncThunk<void, string>('family/addTo', async 
   await axiosApi.patch('/family/' + id + '/toggleAdd');
 });
 
-export const LeaveFromFamily = createAsyncThunk<void, string>('family/leaveFrom', async (id) => {
-  await axiosApi.patch('/family/' + id + '/toggleDelete');
+interface LeaveParams {
+  familyID: string;
+  userID: string;
+}
+
+export const LeaveFromFamily = createAsyncThunk<void, LeaveParams>('family/leaveFrom', async (params) => {
+  await axiosApi.patch('/family/' + params.familyID + '/toggleDelete?user=' + params.userID);
 });
