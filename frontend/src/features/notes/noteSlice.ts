@@ -33,12 +33,6 @@ const NoteSlice = createSlice({
   name: 'Note',
   initialState,
   reducers: {
-    controlModal: (state, { payload: type }: PayloadAction<boolean>) => {
-      state.modal = type;
-    },
-    unsetNote: (state) => {
-      state.oneNote = null;
-    },
     setNote: (state, action) => {
       state.oneNote = action.payload;
     },
@@ -102,9 +96,8 @@ const NoteSlice = createSlice({
     });
   },
 });
-export const { setNote, unsetNote } = NoteSlice.actions;
+export const { setNote } = NoteSlice.actions;
 export const NoteReducer = NoteSlice.reducer;
-export const { controlModal } = NoteSlice.actions;
 export const selectNoteList = (state: RootState) => state.Note.listNote;
 export const selectGetAllNoteLoading = (state: RootState) => state.Note.getAllNoteLoading;
 export const selectCreateNoteLoading = (state: RootState) => state.Note.createNoteLoading;

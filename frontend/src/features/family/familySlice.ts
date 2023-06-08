@@ -52,12 +52,6 @@ const familySlice = createSlice({
   name: 'family',
   initialState,
   reducers: {
-    controlModal: (state, { payload: type }: PayloadAction<boolean>) => {
-      state.modal = type;
-    },
-    unsetFamily: (state) => {
-      state.oneFamily = null;
-    },
     setFamily: (state, action) => {
       state.oneFamily = action.payload;
     },
@@ -162,9 +156,8 @@ const familySlice = createSlice({
     });
   },
 });
-export const { setFamily, unsetFamily } = familySlice.actions;
+export const { setFamily } = familySlice.actions;
 export const familyReducer = familySlice.reducer;
-export const { controlModal } = familySlice.actions;
 export const selectFamilyList = (state: RootState) => state.family.listFamily;
 export const selectGetAllFamilyLoading = (state: RootState) => state.family.getAllFamilyLoading;
 export const selectDeletingFamily = (state: RootState) => state.family.deletingFamily;
@@ -172,7 +165,6 @@ export const selectCreateFamilyLoading = (state: RootState) => state.family.crea
 export const selectRemoveFamilyLoading = (state: RootState) => state.family.removeFamilyLoading;
 export const selectFamilyError = (state: RootState) => state.family.familyError;
 export const selectErrorRemove = (state: RootState) => state.family.errorRemove;
-export const selectModal = (state: RootState) => state.family.modal;
 export const selectOneFamily = (state: RootState) => state.family.oneFamily;
 export const selectOneFamilyLoading = (state: RootState) => state.family.oneFamilyLoading;
 export const selectUpdateFamilyLoading = (state: RootState) => state.family.updateFamilyLoading;

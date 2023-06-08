@@ -33,12 +33,6 @@ const categorySlice = createSlice({
   name: 'category',
   initialState,
   reducers: {
-    controlModal: (state, { payload: type }: PayloadAction<boolean>) => {
-      state.modal = type;
-    },
-    unsetCategory: (state) => {
-      state.oneCategory = null;
-    },
     setCategory: (state, action) => {
       state.oneCategory = action.payload;
     },
@@ -102,9 +96,8 @@ const categorySlice = createSlice({
     });
   },
 });
-export const { setCategory, unsetCategory } = categorySlice.actions;
+export const { setCategory} = categorySlice.actions;
 export const categoryReducer = categorySlice.reducer;
-export const { controlModal } = categorySlice.actions;
 export const selectCategoryList = (state: RootState) => state.category.listCategory;
 export const selectGetAllCategoryLoading = (state: RootState) => state.category.getAllCategoryLoading;
 export const selectCreateCategoryLoading = (state: RootState) => state.category.createCategoryLoading;
