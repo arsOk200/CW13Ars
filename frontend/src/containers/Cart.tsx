@@ -30,7 +30,7 @@ const Cart = () => {
   };
 
   if (!Cart) {
-    return <Navigate to={'/'} />;
+    return <Navigate to="/" />;
   }
   return (
     <>

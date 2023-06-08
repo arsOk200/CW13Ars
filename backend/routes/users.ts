@@ -7,7 +7,6 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import config from '../config';
 import Product from '../models/Product';
-import BasketRouter from './carts';
 
 const UsersRouter = express.Router();
 
