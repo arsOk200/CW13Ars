@@ -1,4 +1,4 @@
-import { Schema, model, Model, HydratedDocument } from 'mongoose';
+import { Schema, model, Model, HydratedDocument, Types } from 'mongoose';
 import { IUser } from '../types';
 import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';

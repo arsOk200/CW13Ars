@@ -10,7 +10,7 @@ export interface User {
 export interface UserMutation {
   username: string;
   password: string;
-  image: File | null ;
+  image: File | null;
   displayName: string;
 }
 
@@ -100,4 +100,10 @@ export interface NoteList {
 export interface NoteMutation {
   text: string;
   title: string;
+}
+
+export interface CartList {
+  _id: string;
+  user: string;
+  cart: ProductList[];
 }

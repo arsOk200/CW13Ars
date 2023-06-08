@@ -62,29 +62,29 @@ const ProductForm: React.FC<Props> = ({ onSubmit, error, Loading, existingProduc
 
   return (
     <form autoComplete="off" onSubmit={submitFormHandler}>
-      {Loading ? <CircularProgress /> : isEdit ? 'Edit product' : 'Create produc'}
+      {Loading ? <CircularProgress /> : isEdit ? 'Edit product' : 'Create product'}
       <Grid container direction="column" sx={{ alignItems: 'stretch', width: '100%' }} spacing={2}>
         <Grid item xs={12}>
           <TextField
             select
-            id="category"
+            name="category"
             label="Category"
             value={state.category}
             onChange={inputChangeHandler}
             required
             sx={{ minWidth: '200px' }}
-            name="category"
             error={Boolean(getFieldError('category'))}
             helperText={getFieldError('category')}
           >
             <MenuItem value="" disabled>
               Select a category
             </MenuItem>
-            {categories.map((category) => (
-              <MenuItem key={category._id} value={category._id}>
-                {category.name}
-              </MenuItem>
-            ))}
+            {categories &&
+              categories.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
+                  {category.name}
+                </MenuItem>
+              ))}
           </TextField>
         </Grid>
         <Grid item xs={12}>

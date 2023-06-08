@@ -3,7 +3,6 @@ import ProductItem from './ProductItem';
 import { Button, CircularProgress, Container, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
-  selectAddingToMyCart,
   selectDeletingProduct,
   selectGetAllProductLoading,
   selectOneProduct,
@@ -12,7 +11,6 @@ import {
   selectUpdateProductLoading,
 } from '../../features/products/productsSlice';
 import {
-  addToCart,
   addToUsersCart,
   fetchOneProduct,
   fetchProduct,
@@ -30,6 +28,8 @@ import { fetchUsersFamilies } from '../../features/family/familyThunk';
 import { selectUser } from '../../features/user/userSlice';
 import FamilyModalItem from '../Family/FamilyModalItem';
 import { selectUsersFamilies, selectUsersFamiliesLoading } from '../../features/family/familySlice';
+import { selectAddToMyCart } from '../../features/Cart/cartSlice';
+import { addToCart } from '../../features/Cart/cartThunk';
 
 const ProductsList = () => {
   const dispatch = useAppDispatch();
@@ -46,7 +46,7 @@ const ProductsList = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [DialogForCart, setDialogForCart] = useState(false);
   const [IDFor, setIdFor] = useState('');
-  const addingToUsersCart = useAppSelector(selectAddingToMyCart);
+  const addingToUsersCart = useAppSelector(selectAddToMyCart);
   const [productID, setProductID] = useState('');
   const { id } = useParams();
   const { confirm } = useConfirm();
@@ -70,7 +70,7 @@ const ProductsList = () => {
     setDialogForCart(false);
   };
 
-  const AddTofamilyCart = async (IDFamily: string) => {
+  const AddToFamilyCart = async (IDFamily: string) => {
     await dispatch(addToUsersCart({ idProduct: productID, idFamily: IDFamily }));
     setDialogForCart(false);
   };
@@ -145,7 +145,7 @@ const ProductsList = () => {
       )}
       {DialogForCart && (
         <ModalBody isOpen={DialogForCart} onClose={() => setDialogForCart(false)}>
-          <Container sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Button color="success" disabled={addingToUsersCart} onClick={() => AddToMyCart()}>
               Add to My Cart
             </Button>
@@ -155,14 +155,14 @@ const ProductsList = () => {
                   <FamilyModalItem
                     key={family._id}
                     family={family}
-                    addToFamilyCart={() => AddTofamilyCart(family._id)}
+                    addToFamilyCart={() => AddToFamilyCart(family._id)}
                   />
                 ))
               ) : (
                 <>
                   <BackHandIcon fontSize="large" />
                   <Typography variant="h5" sx={{ marginLeft: '5px' }}>
-                    There are no families at the moment!
+                    you are not in families
                   </Typography>
                 </>
               )

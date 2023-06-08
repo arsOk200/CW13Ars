@@ -15,6 +15,7 @@ import Family from './containers/Family';
 import Notes from './containers/Notes';
 import ProductPage from './components/Products/RroductPage';
 import FamilyPage from './components/Family/FamilyPage';
+import Cart from './containers/Cart';
 
 function App() {
   const user = useAppSelector(selectUser);
@@ -34,6 +35,7 @@ function App() {
           <Route path="/family" element={<Family />} />
           <Route path="/family/:id" element={<FamilyPage />} />
           <Route path="/notes" element={<Notes />} />
+          <Route path="/basket" element={<Cart />} />
         </Route>
         <Route path="/category/:id" element={<Products />} />
         <Route path="/" element={<Products />} />

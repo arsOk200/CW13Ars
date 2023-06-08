@@ -1,7 +1,6 @@
 import React from 'react';
-import { CardActionArea, CardActions, Typography } from '@mui/material';
+import { CardActionArea, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
-import family from '../../containers/Family';
 import CardContent from '@mui/material/CardContent';
 import { FamilyOne } from '../../types';
 
@@ -12,7 +11,7 @@ interface Props {
 
 const FamilyModalItem: React.FC<Props> = ({ addToFamilyCart, family }) => {
   return (
-    <Card sx={{ maxWidth: 300, margin: '10px' }}>
+    <Card sx={{ width: '100%', margin: '10px' }}>
       <CardActionArea onClick={addToFamilyCart}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

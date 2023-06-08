@@ -1,8 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { GlobalError, ProductList, ValidationError } from '../../types';
 import {
-  addToCart,
   addToUsersCart,
   createProduct,
   fetchOneProduct,
@@ -24,7 +23,6 @@ interface productSlice {
   oneProduct: null | ProductList;
   updateProductLoading: boolean;
   oneProductLoading: boolean;
-  adddingToMyCartLoadding: boolean;
   addingToFamiliesCart: boolean;
   deletingFromUsersCart: boolean;
 }
@@ -41,7 +39,6 @@ const initialState: productSlice = {
   updateProductLoading: false,
   oneProductLoading: false,
   deletingProduct: false,
-  adddingToMyCartLoadding: false,
   addingToFamiliesCart: false,
   deletingFromUsersCart: false,
 };
@@ -50,12 +47,6 @@ const productSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {
-    controlModal: (state, { payload: type }: PayloadAction<boolean>) => {
-      state.modal = type;
-    },
-    unsetProduct: (state) => {
-      state.oneProduct = null;
-    },
     setProduct: (state, action) => {
       state.oneProduct = action.payload;
     },
@@ -93,17 +84,6 @@ const productSlice = createSlice({
       state.updateProductLoading = false;
       state.productError = error || null;
     });
-
-    builder.addCase(addToCart.pending, (state) => {
-      state.adddingToMyCartLoadding = true;
-    });
-    builder.addCase(addToCart.fulfilled, (state) => {
-      state.adddingToMyCartLoadding = false;
-    });
-    builder.addCase(addToCart.rejected, (state) => {
-      state.adddingToMyCartLoadding = false;
-    });
-
     builder.addCase(addToUsersCart.pending, (state) => {
       state.addingToFamiliesCart = true;
     });
@@ -149,9 +129,8 @@ const productSlice = createSlice({
     });
   },
 });
-export const { setProduct, unsetProduct } = productSlice.actions;
+export const { setProduct } = productSlice.actions;
 export const productReducer = productSlice.reducer;
-export const { controlModal } = productSlice.actions;
 export const selectProductList = (state: RootState) => state.product.listProduct;
 export const selectGetAllProductLoading = (state: RootState) => state.product.getAllProductLoading;
 export const selectDeletingProduct = (state: RootState) => state.product.deletingProduct;
@@ -159,9 +138,7 @@ export const selectCreateProductLoading = (state: RootState) => state.product.cr
 export const selectRemoveProductLoading = (state: RootState) => state.product.removeProductLoading;
 export const selectProductError = (state: RootState) => state.product.productError;
 export const selectErrorRemove = (state: RootState) => state.product.errorRemove;
-export const selectModal = (state: RootState) => state.product.modal;
 export const selectOneProduct = (state: RootState) => state.product.oneProduct;
 export const selectOneProductLoading = (state: RootState) => state.product.oneProductLoading;
 export const selectUpdateProductLoading = (state: RootState) => state.product.updateProductLoading;
-export const selectAddingToMyCart = (state: RootState) => state.product.adddingToMyCartLoadding;
 export const selectAddToUsersCart = (state: RootState) => state.product.addingToFamiliesCart;

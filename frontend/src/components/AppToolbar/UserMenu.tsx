@@ -17,7 +17,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {
   selectOneUserForEdit,
   selectOneUserForEditError,
-  selectOneUserForEditLoading,
   selectOneUserForEditUpdateLoading,
 } from '../../features/user/userSlice';
 import { toast } from 'react-toastify';
@@ -35,7 +34,6 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   const existingUser = useAppSelector(selectOneUserForEdit);
   const editLoading = useAppSelector(selectOneUserForEditUpdateLoading);
   const error = useAppSelector(selectOneUserForEditError);
-  const fetching = useAppSelector(selectOneUserForEditLoading);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { confirm } = useConfirm();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

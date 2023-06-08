@@ -3,7 +3,7 @@ import User from './User';
 import Product from './Product';
 const Schema = mongoose.Schema;
 
-const CartSchema = new Schema({
+const BasketSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -29,5 +29,5 @@ const CartSchema = new Schema({
   },
 });
 
-const Cart = mongoose.model('Cart', CartSchema);
+const Cart = mongoose.model('Cart', BasketSchema);
 export default Cart;

@@ -6,6 +6,8 @@ import auth from '../middleware/auth';
 import path from 'path';
 import { promises as fs } from 'fs';
 import config from '../config';
+import Product from '../models/Product';
+import BasketRouter from './carts';
 
 const UsersRouter = express.Router();
 
@@ -46,15 +48,51 @@ UsersRouter.get('/:id', auth, async (req, res, next) => {
   }
 });
 
-UsersRouter.put('/:id', auth, imagesUpload.single('image'), async (req, res, next) => {
+UsersRouter.get('/cart', auth, async (req, res, next) => {
   try {
-    const Edit = {
-      username: req.body.username,
-      password: req.body.password,
-      displayName: req.body.displayName,
-      image: req.file ? req.file.filename : null,
-    };
+    const token = req.get('Authorization');
+    const user = await User.findOne({ token: token });
+    if (!user) {
+      return res.status(403);
+    }
+
+    const result = await User.aggregate([
+      { $lookup: { from: 'products', localField: 'cart._id', foreignField: '_id', as: 'cart' } },
+    ]);
+    return res.send(result[0]);
+  } catch (e) {
+    return next(e);
+  }
+});
+
+UsersRouter.patch('/:id/toggleBasket/', auth, async (req, res, next) => {
+  try {
     const id = req.params.id as string;
+    const product = await Product.findOne({ _id: id });
+    if (!product) {
+      return res.status(400);
+    }
+    const token = req.get('Authorization');
+    const user = await User.findOne({ token: token });
+    if (!user) {
+      return res.status(403);
+    }
+    const update = await User.updateOne({ user: user._id }, { $push: { cart: product } });
+    return res.send(update);
+  } catch (e) {
+    return next(e);
+  }
+});
+
+UsersRouter.put('/:id', auth, imagesUpload.single('image'), async (req, res, next) => {
+  const Edit = {
+    username: req.body.username,
+    password: req.body.password,
+    displayName: req.body.displayName,
+    image: req.file ? req.file.filename : null,
+  };
+  const id = req.params.id as string;
+  try {
     const user = await User.findOne({ _id: id });
     if (!user) {
       return res.status(404).send({ name: 'Not Found' });
@@ -75,6 +113,7 @@ UsersRouter.put('/:id', auth, imagesUpload.single('image'), async (req, res, nex
     const result = await user.save();
     return res.send(result);
   } catch (e) {
+    await User.findOneAndUpdate({ _id: id }, { image: Edit.image });
     return next(e);
   }
 });

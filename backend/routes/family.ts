@@ -160,7 +160,7 @@ familyRouter.patch('/:id/toggleDeleteFromCart', auth, async (req, res, next) => 
     }
     const ProductToAdd = await Product.findOne({ _id: product });
     if (!ProductToAdd) {
-      return res.status(400);
+      return res.status(404);
     }
     const token = req.get('Authorization');
     const user = await User.findOne({ token: token });

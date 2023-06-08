@@ -1,13 +1,28 @@
 import auth from '../middleware/auth';
 import Product from '../models/Product';
 import User from '../models/User';
-
 import express from 'express';
 import Cart from '../models/Cart';
+const CartRouter = express.Router();
 
-const cartRouter = express.Router();
+CartRouter.get('/', auth, async (req, res, next) => {
+  try {
+    const token = req.get('Authorization');
+    const user = await User.findOne({ token: token });
+    if (!user) {
+      return res.status(403);
+    }
+    const result = await Cart.aggregate([
+      { $match: { user: { $eq: user._id } } },
+      { $lookup: { from: 'products', localField: 'cart._id', foreignField: '_id', as: 'cart' } },
+    ]);
+    return res.send(result[0]);
+  } catch (e) {
+    return next(e);
+  }
+});
 
-cartRouter.patch('/:id/toggleCart/', auth, async (req, res, next) => {
+CartRouter.patch('/:id/toggleCart/', auth, async (req, res, next) => {
   try {
     const id = req.params.id as string;
     const product = await Product.findOne({ _id: id });
@@ -22,6 +37,7 @@ cartRouter.patch('/:id/toggleCart/', auth, async (req, res, next) => {
     const result = await Cart.findOne({ user: user._id });
     if (!result) {
       const Data = await Cart.create({ user: user._id, cart: { cart: product } });
+      await Cart.updateOne({ user: user._id }, { $push: { cart: product } });
       await Data.save();
       return res.send(Data);
     } else if (result) {
@@ -35,7 +51,7 @@ cartRouter.patch('/:id/toggleCart/', auth, async (req, res, next) => {
   }
 });
 
-cartRouter.patch('/:id/toggleDelete/', auth, async (req, res, next) => {
+CartRouter.patch('/:id/toggleDelete/', auth, async (req, res, next) => {
   try {
     const token = req.get('Authorization');
     const user = await User.findOne({ token: token });
@@ -45,21 +61,17 @@ cartRouter.patch('/:id/toggleDelete/', auth, async (req, res, next) => {
     const id = req.params.id as string;
     const product = await Product.findOne({ _id: id });
     if (!product) {
-      return res.status(404);
+      return res.status(404).send({ name: 'not found 2' });
     }
     const result = await Cart.findOne({ user: user._id });
     if (!result) {
-      return res.status(404);
+      return res.status(404).send({ name: 'not found 3' });
     }
-    const update = await Cart.findOne({ _id: result._id, cart: { $elemMatch: { _id: product._id } } });
-    if (!update) {
-      return res.status(403);
-    }
-    await Cart.updateOne({ _id: id }, { $pull: { cart: { _id: product._id } } });
-    return res.send(update);
+    const deleteResult = await Cart.updateOne({ user: user._id }, { $pull: { cart: { _id: product._id } } });
+    return res.send(deleteResult);
   } catch (e) {
     return next(e);
   }
 });
 
-export default cartRouter;
+export default CartRouter;
