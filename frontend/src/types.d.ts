@@ -7,6 +7,13 @@ export interface User {
   displayName: string;
 }
 
+export interface UserMutation {
+  username: string;
+  password: string;
+  image: File | null ;
+  displayName: string;
+}
+
 export interface RegisterResponse {
   message: string;
   user: User;

@@ -1,7 +1,7 @@
 import { RootState } from '../../app/store';
 import { createSlice } from '@reduxjs/toolkit';
-import { googleLogin, login, register } from './userThunks';
-import { GlobalError, User, ValidationError } from '../../types';
+import { getEditingUser, login, register, updateUser } from './userThunks';
+import { GlobalError, User, UserMutation, ValidationError } from '../../types';
 
 interface UsersState {
   user: User | null;
@@ -9,6 +9,10 @@ interface UsersState {
   registerError: ValidationError | null;
   loginLoading: boolean;
   loginError: GlobalError | null;
+  oneEditUser: UserMutation | null;
+  getOneLoading: boolean;
+  editingError: ValidationError | null;
+  editOneLoading: boolean;
 }
 
 const initialState: UsersState = {
@@ -17,6 +21,10 @@ const initialState: UsersState = {
   registerLoading: false,
   loginError: null,
   loginLoading: false,
+  oneEditUser: null,
+  getOneLoading: false,
+  editingError: null,
+  editOneLoading: false,
 };
 
 export const usersSlice = createSlice({
@@ -25,6 +33,9 @@ export const usersSlice = createSlice({
   reducers: {
     unsetUser: (state) => {
       state.user = null;
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -53,25 +64,39 @@ export const usersSlice = createSlice({
       state.loginError = error || null;
     });
 
-    builder.addCase(googleLogin.pending, (state) => {
-      state.loginLoading = true;
-      state.loginError = null;
+    builder.addCase(getEditingUser.pending, (state) => {
+      state.oneEditUser = null;
+      state.getOneLoading = true;
     });
-    builder.addCase(googleLogin.fulfilled, (state, { payload: user }) => {
-      state.loginLoading = false;
-      state.user = user;
+    builder.addCase(getEditingUser.fulfilled, (state, { payload }) => {
+      state.oneEditUser = payload;
+      state.getOneLoading = false;
     });
-    builder.addCase(googleLogin.rejected, (state, { payload: error }) => {
-      state.loginLoading = false;
-      state.loginError = error || null;
+    builder.addCase(getEditingUser.rejected, (state) => {
+      state.getOneLoading = false;
+    });
+    builder.addCase(updateUser.pending, (state) => {
+      state.editingError = null;
+      state.editOneLoading = true;
+    });
+    builder.addCase(updateUser.fulfilled, (state) => {
+      state.editOneLoading = false;
+    });
+    builder.addCase(updateUser.rejected, (state, { payload: error }) => {
+      state.editingError = error || null;
+      state.editOneLoading = false;
     });
   },
 });
 
 export const usersReducer = usersSlice.reducer;
-export const { unsetUser } = usersSlice.actions;
+export const { unsetUser, setUser } = usersSlice.actions;
 export const selectUser = (state: RootState) => state.users.user;
 export const selectRegisterLoading = (state: RootState) => state.users.registerLoading;
 export const selectRegisterError = (state: RootState) => state.users.registerError;
 export const selectLoginLoading = (state: RootState) => state.users.loginLoading;
 export const selectLoginError = (state: RootState) => state.users.loginError;
+export const selectOneUserForEdit = (state: RootState) => state.users.oneEditUser;
+export const selectOneUserForEditLoading = (state: RootState) => state.users.getOneLoading;
+export const selectOneUserForEditError = (state: RootState) => state.users.editingError;
+export const selectOneUserForEditUpdateLoading = (state: RootState) => state.users.editOneLoading;

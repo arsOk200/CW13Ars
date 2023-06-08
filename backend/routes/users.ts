@@ -46,6 +46,39 @@ UsersRouter.get('/:id', auth, async (req, res, next) => {
   }
 });
 
+UsersRouter.put('/:id', auth, imagesUpload.single('image'), async (req, res, next) => {
+  try {
+    const Edit = {
+      username: req.body.username,
+      password: req.body.password,
+      displayName: req.body.displayName,
+      image: req.file ? req.file.filename : null,
+    };
+    const id = req.params.id as string;
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.status(404).send({ name: 'Not Found' });
+    }
+    if (Edit.displayName && Edit.displayName !== user.displayName) {
+      user.displayName = Edit.displayName;
+    }
+    if (Edit.password && Edit.password !== user.password) {
+      user.password = Edit.password;
+    }
+    if (Edit.username && Edit.username !== user.username) {
+      user.username = Edit.username;
+    }
+    if (Edit.image && Edit.image !== user.image) {
+      await fs.unlink(path.join(config.publicPath, `/images/${user.image}`));
+      user.image = Edit.image;
+    }
+    const result = await user.save();
+    return res.send(result);
+  } catch (e) {
+    return next(e);
+  }
+});
+
 UsersRouter.delete('/sessions', async (req, res, next) => {
   try {
     const token = req.get('Authorization');
