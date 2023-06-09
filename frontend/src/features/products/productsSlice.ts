@@ -135,10 +135,7 @@ export const selectProductList = (state: RootState) => state.product.listProduct
 export const selectGetAllProductLoading = (state: RootState) => state.product.getAllProductLoading;
 export const selectDeletingProduct = (state: RootState) => state.product.deletingProduct;
 export const selectCreateProductLoading = (state: RootState) => state.product.createProductLoading;
-export const selectRemoveProductLoading = (state: RootState) => state.product.removeProductLoading;
 export const selectProductError = (state: RootState) => state.product.productError;
-export const selectErrorRemove = (state: RootState) => state.product.errorRemove;
 export const selectOneProduct = (state: RootState) => state.product.oneProduct;
 export const selectOneProductLoading = (state: RootState) => state.product.oneProductLoading;
 export const selectUpdateProductLoading = (state: RootState) => state.product.updateProductLoading;
-export const selectAddToUsersCart = (state: RootState) => state.product.addingToFamiliesCart;

@@ -103,8 +103,5 @@ export const selectGetAllNoteLoading = (state: RootState) => state.Note.getAllNo
 export const selectCreateNoteLoading = (state: RootState) => state.Note.createNoteLoading;
 export const selectRemoveNoteLoading = (state: RootState) => state.Note.removeNoteLoading;
 export const selectNoteError = (state: RootState) => state.Note.NoteError;
-export const selectErrorRemove = (state: RootState) => state.Note.errorRemove;
-export const selectModal = (state: RootState) => state.Note.modal;
 export const selectOneNote = (state: RootState) => state.Note.oneNote;
-export const selectOneNoteLoading = (state: RootState) => state.Note.oneNoteLoading;
 export const selectUpdateNoteLoading = (state: RootState) => state.Note.updateNoteLoading;

@@ -103,8 +103,5 @@ export const selectGetAllCategoryLoading = (state: RootState) => state.category.
 export const selectCreateCategoryLoading = (state: RootState) => state.category.createCategoryLoading;
 export const selectRemoveCategoryLoading = (state: RootState) => state.category.removeCategoryLoading;
 export const selectCategoryError = (state: RootState) => state.category.categoryError;
-export const selectErrorRemove = (state: RootState) => state.category.errorRemove;
-export const selectModal = (state: RootState) => state.category.modal;
 export const selectOneCategory = (state: RootState) => state.category.oneCategory;
-export const selectOneCategoryLoading = (state: RootState) => state.category.oneCategoryLoading;
 export const selectUpdateCategoryLoading = (state: RootState) => state.category.updateCategoryLoading;
