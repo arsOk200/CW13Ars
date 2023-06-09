@@ -33,7 +33,7 @@ const run = async () => {
       token: crypto.randomUUID(),
       role: 'admin',
       displayName: 'admin',
-      image: 'fixtures/admin.webp',
+      image: 'fixtures/admin.png',
     },
     {
       username: 'Second',
@@ -110,7 +110,7 @@ const run = async () => {
       name: 'Bread',
       price: 150,
       description: 'White bread 500g',
-      image: 'fixtures/bread.jpeg',
+      image: 'fixtures/bread.png',
     },
     {
       category: category1._id,
