@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { NoteList, GlobalError, ValidationError } from '../../types';
 import { RootState } from '../../app/store';
 import { createNote, fetchNote, fetchOneNote, removeNote, updateNote } from './noteThunk';

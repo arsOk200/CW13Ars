@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { CategoryList, GlobalError, ValidationError } from '../../types';
 import { createCategory, fetchCategory, fetchOneCategory, removeCategory, updateCategory } from './CategoryThunk';
 import { RootState } from '../../app/store';
@@ -96,7 +96,7 @@ const categorySlice = createSlice({
     });
   },
 });
-export const { setCategory} = categorySlice.actions;
+export const { setCategory } = categorySlice.actions;
 export const categoryReducer = categorySlice.reducer;
 export const selectCategoryList = (state: RootState) => state.category.listCategory;
 export const selectGetAllCategoryLoading = (state: RootState) => state.category.getAllCategoryLoading;
