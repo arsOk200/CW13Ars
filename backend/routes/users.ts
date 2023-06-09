@@ -106,7 +106,7 @@ UsersRouter.put('/:id', auth, imagesUpload.single('image'), async (req, res, nex
       user.username = Edit.username;
     }
     if (Edit.image && Edit.image !== user.image) {
-      await fs.unlink(path.join(config.publicPath, `/images/${user.image}`));
+      await fs.unlink(path.join(config.publicPath, `/${user.image}`));
       user.image = Edit.image;
     }
     const result = await user.save();

@@ -61,7 +61,7 @@ const ProductItem: React.FC<Props> = ({ product, deleteProduct, deletingProduct,
   return (
     <Card sx={{ maxWidth: 300, margin: '10px' }}>
       <CardActionArea onClick={() => navigate('/product/' + product._id)}>
-        <CardMedia component="img" height="140" image={apiUrl + '/images/' + product.image} alt={product.name} />
+        <CardMedia component="img" height="140" image={apiUrl + '/' + product.image} alt={product.name} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {product.name}

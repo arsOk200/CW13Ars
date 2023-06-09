@@ -1,6 +1,6 @@
 import { styled, TableRow } from '@mui/material';
 
-export const apiUrl = 'http://localhost:8200';
+export const apiUrl = 'http://localhost:8000';
 export const StyledTableRow = styled(TableRow)(() => ({
   '&:nth-of-type(odd)': {
     backgroundColor: '#c7c7c7',

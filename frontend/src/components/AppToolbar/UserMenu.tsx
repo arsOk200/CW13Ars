@@ -61,7 +61,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   let cardImage = notImageAvailable;
   if (user.image) {
-    cardImage = apiUrl + '/images/' + user.image;
+    cardImage = apiUrl + '/' + user.image;
   }
   return (
     <>

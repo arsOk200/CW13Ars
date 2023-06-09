@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import config from './config';
 import User from './models/User';
 import Category from './models/Category';
@@ -8,64 +8,63 @@ const run = async () => {
   mongoose.set('strictQuery', false);
   await mongoose.connect(config.db);
   const db = mongoose.connection;
-
   try {
+    await db.dropCollection('users');
     await db.dropCollection('carts');
     await db.dropCollection('categories');
     await db.dropCollection('families');
     await db.dropCollection('notes');
     await db.dropCollection('products');
-    await db.dropCollection('users');
   } catch (e) {
     console.log('Collections were not present, skipping drop...');
   }
   await User.create(
     {
-      username: 'user',
-      password: 'user',
+      username: 'First',
+      password: 'First',
       token: crypto.randomUUID(),
       role: 'user',
-      displayName: 'user',
+      displayName: 'First',
       image: 'fixtures/avatar1.jpg',
     },
     {
       username: 'admin',
-      password: 'admin',
+      password: '12345',
       token: crypto.randomUUID(),
       role: 'admin',
       displayName: 'admin',
       image: 'fixtures/admin.webp',
     },
     {
-      username: 'user2',
-      password: 'user2',
+      username: 'Second',
+      password: 'Second',
       token: crypto.randomUUID(),
       role: 'user',
-      displayName: 'user2',
+      displayName: 'Second',
       image: 'fixtures/avatar2.jpeg',
     },
     {
-      username: 'user3',
-      password: 'user3',
+      username: 'Third',
+      password: 'Third',
       token: crypto.randomUUID(),
       role: 'user',
-      displayName: 'user3',
+      displayName: 'Third',
       image: 'fixtures/avatar3.jpg',
     },
     {
-      username: 'user4',
-      password: 'user4',
+      username: 'Four',
+      password: 'Four',
       token: crypto.randomUUID(),
       role: 'user',
-      displayName: 'user4',
+      displayName: 'Four',
       image: 'fixtures/avatar4.png',
     },
     {
-      username: 'user5',
-      password: 'user5',
+      username: 'Five',
+      password: 'Five',
       token: crypto.randomUUID(),
       role: 'user',
-      displayName: 'user5',
+      displayName: 'Five',
       image: 'fixtures/avatar5.jpeg',
     },
   );
@@ -101,7 +100,7 @@ const run = async () => {
   await Product.create(
     {
       category: category2._id,
-      name: 'Milk',
+      name: 'Milk 1l',
       price: 120,
       description: '1L Milk 2.5%',
       image: 'fixtures/Milk.jpg',
@@ -114,7 +113,7 @@ const run = async () => {
       image: 'fixtures/bread.jpeg',
     },
     {
-      category: category2._id,
+      category: category1._id,
       name: 'Bun',
       price: 90,
       description: 'Bun without sugar 100g',

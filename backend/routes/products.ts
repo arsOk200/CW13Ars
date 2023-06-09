@@ -59,7 +59,7 @@ productsRouter.put('/:id', auth, permit('admin'), imagesUpload.single('image'), 
     };
     if (product) {
       if (images.image && images.image !== product.image) {
-        await fs.unlink(path.join(config.publicPath, `/images/${product.image}`));
+        await fs.unlink(path.join(config.publicPath, `/${product.image}`));
         await Product.updateOne({ _id: id }, { image: images.image });
       }
     }

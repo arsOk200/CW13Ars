@@ -29,7 +29,7 @@ const CartItem: React.FC<Props> = ({ product, deleteProductFromCart, deleteLoadi
         <CardMedia
           component="img"
           sx={{ width: '50px', height: '100px' }}
-          image={apiUrl + '/images/' + product.image}
+          image={apiUrl + '/' + product.image}
           alt={product.name}
         />
       </CardContent>

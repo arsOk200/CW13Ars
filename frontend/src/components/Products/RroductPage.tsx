@@ -51,7 +51,7 @@ const ProductPage = () => {
         }}
       >
         <Box padding="10px">
-          <img style={{ maxWidth: '100%' }} src={apiUrl + '/images/' + oneProduct?.image} alt={oneProduct?.name} />
+          <img style={{ maxWidth: '100%' }} src={apiUrl + '/' + oneProduct?.image} alt={oneProduct?.name} />
         </Box>
         <Grid padding="20px" container alignSelf="start">
           <Grid width="100%" flexDirection="column" borderTop="1px solid #252525">
