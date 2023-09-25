@@ -19,7 +19,6 @@ import Cart from './containers/Cart';
 
 function App() {
   const user = useAppSelector(selectUser);
-
   return (
     <Layout>
       <Routes>
