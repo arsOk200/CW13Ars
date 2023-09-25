@@ -7,9 +7,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TableRow,
   Typography,
-  TableHead,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectOneFamily, selectOneFamilyLoading } from '../../features/family/familySlice';
@@ -20,13 +20,14 @@ import FamilyPageUsers from './FamilyPageUsers';
 import FamilyPageProducts from './FamilyPageProducts';
 import { removeFromUsersCart } from '../../features/products/productsThunk';
 import useConfirm from '../Confirm&Alert/useConfirm';
+
 const FamilyPage = () => {
   const dispatch = useAppDispatch();
   const oneFamily = useAppSelector(selectOneFamily);
   const fetchingOnefamily = useAppSelector(selectOneFamilyLoading);
-  const { id } = useParams() as { id: string };
+  const {id} = useParams() as { id: string };
   const FamilyUsers = oneFamily?.users;
-  const { confirm } = useConfirm();
+  const {confirm} = useConfirm();
   useEffect(() => {
     if (id) {
       dispatch(fetchOneFamily(id));
@@ -35,7 +36,7 @@ const FamilyPage = () => {
 
   const onDelete = async (userID: string) => {
     if (await confirm('Delete', 'Do you reaally want to delete?')) {
-      await dispatch(LeaveFromFamily({ familyID: id, userID: userID }));
+      await dispatch(LeaveFromFamily({familyID: id, userID: userID}));
       await dispatch(fetchOneFamily(id));
     } else {
       return;
@@ -43,45 +44,44 @@ const FamilyPage = () => {
   };
   const deleteProductFromFamily = async (ID: string) => {
     if (await confirm('Delete', 'Do you reaally want to delete?')) {
-      await dispatch(removeFromUsersCart({ idProduct: ID, idFamily: id }));
+      await dispatch(removeFromUsersCart({idProduct: ID, idFamily: id}));
       await dispatch(fetchOneFamily(id));
     } else {
       return;
     }
   };
+  console.log(oneFamily?.owner);
   return (
     <>
-      <Typography sx={{ mb: 2 }} variant="h4">
+      <Typography sx={{mb: 2}} variant="h4">
         Family: {oneFamily?.name}
       </Typography>
       {!fetchingOnefamily ? (
-        oneFamily?.owner.length ? (
-          oneFamily?.owner.map((user) => (
-            <Typography key={user._id} sx={{ mb: 2 }} variant="h4">
-              owner: {user.displayName}
-            </Typography>
-          ))
+        oneFamily?.owner ? (
+          <Typography key={oneFamily?.owner._id} sx={{mb: 2}} variant="h4">
+            owner: {oneFamily?.owner.displayName}
+          </Typography>
         ) : (
           <>
-            <BackHandIcon fontSize="large" />
-            <Typography variant="h5" sx={{ marginLeft: '5px' }}>
+            <BackHandIcon fontSize="large"/>
+            <Typography variant="h5" sx={{marginLeft: '5px'}}>
               No Owners
             </Typography>
           </>
         )
       ) : (
-        <CircularProgress />
+        <CircularProgress/>
       )}
 
-      <Paper elevation={3} sx={{ width: '100%', height: '500px', overflowX: 'hidden', marginBottom: '30px' }}>
+      <Paper elevation={3} sx={{width: '100%', height: '500px', overflowX: 'hidden', marginBottom: '30px'}}>
         <TableContainer>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{ bgcolor: '#252525' }}>
+          <Table sx={{minWidth: 650}} aria-label="simple table">
+            <TableHead sx={{bgcolor: '#252525'}}>
               <TableRow>
-                <TableCell align="left" sx={{ color: 'white' }}>
+                <TableCell align="left" sx={{color: 'white'}}>
                   Users
                 </TableCell>
-                <TableCell align="right" sx={{ color: 'white' }}>
+                <TableCell align="right" sx={{color: 'white'}}>
                   Manegment
                 </TableCell>
               </TableRow>
@@ -94,7 +94,7 @@ const FamilyPage = () => {
                       key={USER._id}
                       user={USER}
                       Leave={() => onDelete(USER._id)}
-                      owner={oneFamily?.owner[0]}
+                      owner={oneFamily?.owner}
                     />
                   ))
                 ) : (
@@ -107,7 +107,7 @@ const FamilyPage = () => {
               ) : (
                 <TableRow>
                   <TableCell>
-                    <CircularProgress />
+                    <CircularProgress/>
                   </TableCell>
                 </TableRow>
               )}
@@ -115,18 +115,18 @@ const FamilyPage = () => {
           </Table>
         </TableContainer>
       </Paper>
-      <Typography variant="h4" sx={{ color: 'black' }}>
+      <Typography variant="h4" sx={{color: 'black'}}>
         Family Cart
       </Typography>
-      <Paper elevation={3} sx={{ width: '100%', height: '500px', overflowX: 'hidden' }}>
+      <Paper elevation={3} sx={{width: '100%', height: '500px', overflowX: 'hidden'}}>
         <TableContainer>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead sx={{ bgcolor: '#252525' }}>
+          <Table sx={{minWidth: 650}} aria-label="simple table">
+            <TableHead sx={{bgcolor: '#252525'}}>
               <TableRow>
-                <TableCell align="left" sx={{ color: 'white' }}>
+                <TableCell align="left" sx={{color: 'white'}}>
                   products
                 </TableCell>
-                <TableCell align="right" sx={{ color: 'white' }}>
+                <TableCell align="right" sx={{color: 'white'}}>
                   Manegment
                 </TableCell>
               </TableRow>
@@ -152,7 +152,7 @@ const FamilyPage = () => {
               ) : (
                 <TableRow>
                   <TableCell>
-                    <CircularProgress />
+                    <CircularProgress/>
                   </TableCell>
                 </TableRow>
               )}

@@ -83,7 +83,7 @@ export interface FamilyList {
 export interface FamilyOne {
   _id: string;
   name: string;
-  owner: User[];
+  owner: User;
   users: User[];
   cart: ProductList[];
 }
